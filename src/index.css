@@ -1020,6 +1020,19 @@ caption {
   }
 }
 
+.piano-roll-container{
+  overflow-y: auto;
+  max-height: 300px;
+}
+
+.piano-roll-button-unclicked{
+  background-color: grey;
+}
+
+.piano-roll-button-clicked{
+  background: blue;
+}
+
 /*
  * Navigation
  */

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Table from './Table'
 import Form from './Form'
+import PianoRollComponent from './PianoRollComponent';
 import SimpleComponent from './ClassComponent';
 import {Song, Track, Instrument, Effect} from 'reactronica';
 
@@ -49,6 +50,7 @@ class App extends React.Component {
           <h1>Hello, React!</h1>
           <Table characterData={characters} removeCharacter={this.removeCharacter}/>
           <SimpleComponent/>
+          <PianoRollComponent/>
           <Form handleSubmit={this.handleSubmit}/>
         </div>
       )
