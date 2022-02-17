@@ -1032,6 +1032,13 @@ caption {
 .piano-roll-button-clicked{
   background: blue;
 }
+.pianorollheader-active{
+  background: blue;
+}
+
+.pianorollheader{
+  background: white;
+}
 
 /*
  * Navigation

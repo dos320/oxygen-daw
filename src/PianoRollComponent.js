@@ -3,13 +3,14 @@ import { typeImplementation } from '@testing-library/user-event/dist/type/typeIm
 import React, { Component, useState } from 'react';
 import {Song, Track, Instrument} from 'reactronica';
 
-var noteNames =     ['C0', 'C#0', 'D0', 'D#0', 'E0', 'F0', 'F#0', 'G0', 'G#0', 'A0', 'A#0', 'B0',
-                            'C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1']
+var noteNames =     ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+                            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4']
 
 class PianoRoll extends Component{
     constructor(props){
         super(props);
         let tmp = [];
+        let steps = [];
         for(var i = 0; i<24; i++){ // we hardcode the totalsteps here lol, fix later
             for(var index = 0; index<16; index++){
                 let buttonID = `pianobutton-${noteNames[i]}-${index}`;
@@ -19,11 +20,17 @@ class PianoRoll extends Component{
             }
         }
 
+        // populate steps with empty arrays for populating later
+        for(var i = 0; i<16; i++){
+            steps.push([]);
+        }
+
         this.state = {
             totalSteps: 16,
             totalKeys: 24,
             pianoButtonStyle: "piano-roll-button-unclicked",
-            pianoButtons: tmp, // todo: change this into a 1d array
+            pianoButtons: tmp, // todo: change this into a 1d array -- done?
+            steps: steps,
         };
     }
 
@@ -41,6 +48,8 @@ class PianoRoll extends Component{
         }*/
 
        let tmp = this.state.pianoButtons;
+       let tmpSteps = this.state.steps;
+       let clickedButtonIsActive = false;
        /*let obj = tmp.filter((item)=>{
            return item.name === buttonID
         });*/
@@ -50,11 +59,26 @@ class PianoRoll extends Component{
             //console.log(tmp[0][i].name + " " + buttonID);
             if(tmp[i].name === buttonID){
                 tmp[i].isActive = !tmp[i].isActive;
+                clickedButtonIsActive = tmp[i].isActive;
                 break;
             }
         }
-       console.log(tmp);
+       console.log(tmpSteps);
 
+       // add to steps upon activating, or removing upon deactivating
+       let columnNum = buttonID.split('-')[2];
+       let noteName = buttonID.split('-')[1];
+       if(clickedButtonIsActive){
+           tmpSteps[columnNum].push(noteName);
+       }else{
+           // loop through the columnNum and find the noteName to remove
+           for(var i = 0; i<tmpSteps[columnNum].length; i++){
+               if(tmpSteps[columnNum][i] === noteName){
+                    tmpSteps[columnNum].splice(i, 1); // remove inactive button
+               }
+           }
+       }
+       this.props.setSteps(tmpSteps);
        this.setState({pianoButtons: tmp});
     }
 
@@ -77,15 +101,24 @@ class PianoRoll extends Component{
         //const [totalSteps, setTotalSteps] = useState(16); // total steps to render in table
 
         //setTotalSteps(16);
-        
+        //console.log(currentStepIndex);
         let rows = [];
         let cell = [];
-        
+        // populating header row 
         for(var index=0; index<this.state.totalSteps; index++){
-            let cellID = `headercell${i}-${index}`;
-            cell.push(<td key={cellID} id={cellID}>{index+1}</td>);
+            let cellID = `headercell-${index}`;
+            cell.push(
+            <td 
+                key={cellID} 
+                id={cellID} 
+                className={index==currentStepIndex ? "pianorollheader-active" : "pianorollheader"}
+            >{index+1}</td>);
         }
         rows.push(<tr key="table-row-header" id="table-row-header"><td></td>{cell}</tr>);
+        
+        // set colour of header based on currentstep
+        //rows[0][currentStepIndex]
+        
         let counter = 0;
         for(var i = 0; i<this.state.totalKeys; i++){
             let rowID = `row${i}`
@@ -147,7 +180,7 @@ const PianoRollComponent = (props) =>{
         <button onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying? 'Stop' : 'Play'}</button>
         <PianoRoll
             currentStepIndex={currentStepIndex}
-            onClick={(steps) => setSteps(steps)}
+            setSteps={(steps) => setSteps(steps)}
         />
 
         <Song isPlaying={isPlaying}>
