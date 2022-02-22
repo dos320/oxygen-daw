@@ -180,7 +180,7 @@ const PianoRollComponent = (props) =>{
         <button onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying? 'Stop' : 'Play'}</button>
         <PianoRoll
             currentStepIndex={currentStepIndex}
-            setSteps={(steps) => setSteps(steps)}
+            setSteps={(steps) => setSteps(steps)} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
         />
 
         <Song isPlaying={isPlaying}>
