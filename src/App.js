@@ -59,8 +59,11 @@ class App extends React.Component {
           <h1>Hello, React!</h1>
           <Table characterData={characters} removeCharacter={this.removeCharacter}/>
           <SimpleComponent/>
-          <TrackContainer updateSteps={(steps) => {this.updateSteps(steps)}}/>
-          <PianoRollComponent updateSteps={(steps) => {this.updateSteps(steps)}}/>
+          <button>New Pattern</button>
+          <Song>
+            <TrackContainer updateSteps={(steps) => {this.updateSteps(steps)}}/>
+            <PianoRollComponent updateSteps={(steps) => {this.updateSteps(steps)}}/>
+          </Song>
           <Form handleSubmit={this.handleSubmit}/>
         </div>
       )

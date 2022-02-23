@@ -1040,6 +1040,14 @@ caption {
   background: white;
 }
 
+.trackButton-active{
+  background:lightskyblue;
+}
+
+.trackButton-inactive{
+  background:grey;
+}
+
 /*
  * Navigation
  */
