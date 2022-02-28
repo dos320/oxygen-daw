@@ -35,7 +35,9 @@ class TrackControl extends Component{ // note: generally, we should always use c
                 onClick={this.props.handleSoloButtonClick}>
                     Solo
                 </button>
-                <button key='track-delete-button-1' id='track-delete-button-1'>Delete</button>
+                <button key='track-delete-button-1' id='track-delete-button-1'>
+                    Delete
+                </button>
             </div>
             </>
         );
@@ -135,6 +137,11 @@ class TrackContainer extends Component{
     initialState={ // note: must add new entries to these upon creating a new track?
         mutedTracks: [],
         currentSoloTrack: '',
+        currentTrackIds: [
+            'track-1',
+            'track-2',
+            'track-3',
+        ]
     };
     state = this.initialState;
 
@@ -148,6 +155,15 @@ class TrackContainer extends Component{
         this.setState({currentSoloTrack: trackID});
     }
 
+    handleNewTrack = () =>{
+        console.log("here")
+        let tempTrackIds = this.state.currentTrackIds;
+        tempTrackIds.push('track-' + (this.state.currentTrackIds.length + 1));
+        console.log(tempTrackIds);
+        
+        this.setState({tempTrackIds});
+    }
+
     // upon clicking the solo button, we want to send to the trackcontainer the trackID (add this trackid in trackview)
     // after receiving the trackID, we want to use a function in trackcontainer to look through each trackview
     // and call the mute function in each (except for the one that is solo)
@@ -155,16 +171,30 @@ class TrackContainer extends Component{
     // pass down the currentsolotrack thing, each child checks to see if its id matches-  if not, then set to mute
     // if blank, unmute
 
-    render(){
-        return(
-            <div>
+    /*
                 <TrackView 
                 currentSoloTrack={this.state.currentSoloTrack} // send to all child tracks, check if they have the same id, if not, then  mute
                 handleSoloTrackChange={this.handleSoloTrackChange}
                 trackID='track-1' // this is sus, i dont think we need this? -- we moved it here instead
                 />
-                <button>New Track</button>
+    */
+
+    render(){
+        var tracksToRender = [];
+        for(var i = 0; i<this.state.currentTrackIds.length; i++){
+            tracksToRender.push(<TrackView 
+                                    currentSoloTrack={this.state.currentSoloTrack}
+                                    handleSoloTrackChange={this.handleSoloTrackChange}
+                                    trackID={this.state.currentTrackIds[i]}
+                                    />
+                                )
+        }   
+        return(
+            <div>
+                {tracksToRender}
+                <button onClick={this.handleNewTrack}>New Track</button>
             </div>
+            
         );
     }
     
