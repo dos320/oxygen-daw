@@ -61,8 +61,12 @@ class App extends React.Component {
           <SimpleComponent/>
           <button>New Pattern</button>
           <Song>
-            <TrackContainer updateSteps={(steps) => {this.updateSteps(steps)}}/>
-            <PianoRollComponent updateSteps={(steps) => {this.updateSteps(steps)}}/>
+            <TrackContainer 
+                updateSteps={(steps) => {this.updateSteps(steps)}}
+            />
+            <PianoRollComponent 
+                updateSteps={(steps) => {this.updateSteps(steps)}}
+            />
           </Song>
           <Form handleSubmit={this.handleSubmit}/>
         </div>

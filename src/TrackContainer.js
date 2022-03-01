@@ -35,7 +35,10 @@ class TrackControl extends Component{ // note: generally, we should always use c
                 onClick={this.props.handleSoloButtonClick}>
                     Solo
                 </button>
-                <button key='track-delete-button-1' id='track-delete-button-1'>
+                <button 
+                key='track-delete-button-1' 
+                id='track-delete-button-1'
+                onClick={this.props.handleDeleteButtonClick}>
                     Delete
                 </button>
             </div>
@@ -63,6 +66,7 @@ class TrackView extends Component{
         super(props);
         this.handleMuteButtonClick = this.handleMuteButtonClick.bind(this);
         this.handleSoloButtonClick = this.handleSoloButtonClick.bind(this);
+        this.handleDeleteButtonClick = this.handleDeleteButtonClick.bind(this);
     }
 
     initialState = {
@@ -102,6 +106,10 @@ class TrackView extends Component{
         this.setState({isTrackMuted: isTrackMuted});
     }
 
+    handleDeleteButtonClick = () => {
+        this.props.handleDeleteTrack(this.props.trackID); // deletes the corresponding entry in parent
+    }
+
     render(){ // create new TrackPatterns inside the track
         return(
             <div>
@@ -109,6 +117,7 @@ class TrackView extends Component{
             <TrackControl
             handleMuteButtonClick={this.handleMuteButtonClick}
             handleSoloButtonClick={this.handleSoloButtonClick}
+            handleDeleteButtonClick={this.handleDeleteButtonClick}
             trackName={this.state.trackName}
             muteActive={this.state.muteActive}
             soloActive={this.state.soloActive}
@@ -161,7 +170,19 @@ class TrackContainer extends Component{
         tempTrackIds.push('track-' + (this.state.currentTrackIds.length + 1));
         console.log(tempTrackIds);
         
-        this.setState({tempTrackIds});
+        this.setState({currentTrackIds: tempTrackIds});
+    }
+
+    handleDeleteTrack = (trackID) =>{
+        let tempTrackIds = this.state.currentTrackIds;
+        for(var i = 0; i<this.state.currentTrackIds.length; i++){
+            console.log(this.state.currentTrackIds[i] == trackID);
+            if(this.state.currentTrackIds[i] == trackID){
+                tempTrackIds.splice(i, 1);
+                break;
+            } 
+        }
+        this.setState({currentTrackIds: tempTrackIds});
     }
 
     // upon clicking the solo button, we want to send to the trackcontainer the trackID (add this trackid in trackview)
@@ -185,6 +206,7 @@ class TrackContainer extends Component{
             tracksToRender.push(<TrackView 
                                     currentSoloTrack={this.state.currentSoloTrack}
                                     handleSoloTrackChange={this.handleSoloTrackChange}
+                                    handleDeleteTrack={this.handleDeleteTrack}
                                     trackID={this.state.currentTrackIds[i]}
                                     />
                                 )
