@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
 import React, { Component, useState } from 'react';
 import {Song, Track, Instrument} from 'reactronica';
+import TrackPattern from './TrackPattern';
 
 // control bar on the left hand side of the track
 class TrackControl extends Component{ // note: generally, we should always use class components when dealing with state
@@ -14,7 +15,7 @@ class TrackControl extends Component{ // note: generally, we should always use c
     render(){ // style={}
         return(
             <>
-            <div>
+            <div className='trackControlContainer'>
                 <button 
                 key='track-name-button-1' 
                 id='track-name-button-1' 
@@ -54,8 +55,9 @@ class TrackPatternContainer extends Component{
     }
     render(){
         return(
-            <>
-            </>
+            <div className='trackPatternContainer'>
+                test
+            </div>
         );
     }
 }
@@ -112,25 +114,23 @@ class TrackView extends Component{
 
     render(){ // create new TrackPatterns inside the track
         return(
-            <div>
-            <>    
-            <TrackControl
-            handleMuteButtonClick={this.handleMuteButtonClick}
-            handleSoloButtonClick={this.handleSoloButtonClick}
-            handleDeleteButtonClick={this.handleDeleteButtonClick}
-            trackName={this.state.trackName}
-            muteActive={this.state.muteActive}
-            soloActive={this.state.soloActive}
-            >
-            </TrackControl>    
-            <Track
-            volume={-3}
-            pan={0}
-            mute={this.state.isTrackMuted ? true : false}
-            >
-            </Track>
-            <TrackPatternContainer/>
-            </>
+            <div className='trackContainer'>   
+                <TrackControl
+                handleMuteButtonClick={this.handleMuteButtonClick}
+                handleSoloButtonClick={this.handleSoloButtonClick}
+                handleDeleteButtonClick={this.handleDeleteButtonClick}
+                trackName={this.state.trackName}
+                muteActive={this.state.muteActive}
+                soloActive={this.state.soloActive}
+                >
+                </TrackControl>    
+                <Track
+                volume={-3}
+                pan={0}
+                mute={this.state.isTrackMuted ? true : false}
+                >
+                </Track>
+                <TrackPatternContainer/>
             </div>
         );
     }
@@ -169,6 +169,7 @@ class TrackContainer extends Component{
         let tempTrackIds = this.state.currentTrackIds;
         tempTrackIds.push('track-' + (this.state.currentTrackIds.length + 1));
         console.log(tempTrackIds);
+        this.props.handleCreateNewTrack(tempTrackIds[tempTrackIds.length-1]); // creates new track entry in parent state for keeping track of patterns
         
         this.setState({currentTrackIds: tempTrackIds});
     }
@@ -182,6 +183,7 @@ class TrackContainer extends Component{
                 break;
             } 
         }
+        this.props.handleDeleteTrack(trackID);
         this.setState({currentTrackIds: tempTrackIds});
     }
 
@@ -208,11 +210,12 @@ class TrackContainer extends Component{
                                     handleSoloTrackChange={this.handleSoloTrackChange}
                                     handleDeleteTrack={this.handleDeleteTrack}
                                     trackID={this.state.currentTrackIds[i]}
+                                    key={this.state.currentTrackIds[i]}
                                     />
                                 )
         }   
         return(
-            <div>
+            <div className='multitrackContainer'>
                 {tracksToRender}
                 <button onClick={this.handleNewTrack}>New Track</button>
             </div>

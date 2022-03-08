@@ -1048,6 +1048,37 @@ caption {
   background:grey;
 }
 
+.trackPatternContainer{
+  background-color: darkgrey;
+  border: 1px solid green;
+  flex: 1 1 auto;
+}
+
+.trackControlContainer{
+  width: 200px;
+  border: 1px solid red;
+  position: relative;
+
+}
+
+.trackContainer{ /* container for both of the above*/
+  border: 1px solid cyan;
+  display: flex;
+  min-width: 2000px;
+}
+
+.multitrackContainer{
+  border: 5px solid black;
+  overflow-x: auto;
+  /*display: flex;
+  flex-direction: column;*/
+}
+
+/* styling for patterns that go inside the trackPatternContainer */
+.trackPattern{
+
+}
+
 /*
  * Navigation
  */

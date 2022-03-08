@@ -29,6 +29,49 @@ class App extends React.Component {
             currentSteps: steps,
         });
     }
+
+    createNewPattern = () =>{
+        let currentSteps = this.state.currentSteps;
+        
+        const patternIDString = "pattern-" + this.state.numPatterns; 
+        let foundIndex = 0;
+        
+        for(let i = 0; i<currentSteps.length; i++){
+            if(currentSteps[i].trackID == this.state.currentSelectedTrackID) {
+                foundIndex = i;
+                break;
+            }
+        }
+
+        // create a new 8 step pattern by default
+        currentSteps[foundIndex].trackSteps.push({
+            patternID: patternIDString, 
+            pattern: [null, null, null, null, null, null, null, null]
+        }) 
+        this.setState({currentSteps: currentSteps, numPatterns: this.state.numPatterns+1});
+    }
+    
+    // find and remove the selected pattern from currentSteps
+    deletePattern = (patternID) =>{
+        
+    }
+
+    handleCreateNewTrack = (trackID) =>{ // we want to create a new entry in currentSteps for each new track created
+        let currentSteps = this.state.currentSteps;
+        currentSteps.push({trackID: trackID, trackSteps: []});
+        this.setState({currentSteps: currentSteps})
+    }
+
+    handleDeleteTrack = (trackID) =>{
+        let currentSteps = this.state.currentSteps;
+        for(let i = 0; i<currentSteps.length; i++){
+            if(currentSteps[i].trackID == trackID){
+                currentSteps.splice(i, 1);
+                break;
+            } 
+        }
+        this.setState({currentSteps: currentSteps});
+    }
     
     state = {
         characters: [
@@ -49,20 +92,30 @@ class App extends React.Component {
                 job: 'Bartender',
             },*/
         ],
-        currentSteps: [], //v we can use this to insert patterns into the tracks
-        currentSelectedTrackID: 0, // use to check which track to insert pattern 
+
+        //v we can use this to insert patterns into the tracks {trackID, allSteps:array}
+        currentSteps: [
+            {trackID: 'track-1', trackSteps: []}, 
+            {trackID: 'track-2', trackSteps: []},
+            {trackID: 'track-3', trackSteps: []},
+        ], 
+        currentSelectedTrackID: 'track-1', // use to check which track to insert pattern TODO: need to change this depending on which track is selected... maybe add an onclick or something for the trackcontainer
+        numPatterns: 0, 
     }
     render() {
         const {characters} = this.state; // why does this break without braces???
       return(
         <div className="container">
-          <h1>Hello, React!</h1>
+          <h1>Oxygen</h1>
           <Table characterData={characters} removeCharacter={this.removeCharacter}/>
           <SimpleComponent/>
-          <button>New Pattern</button>
+          <button id='new-pattern-button' key='new-pattern-button' onClick={this.createNewPattern}>New Pattern</button>
+          <button id='delete-pattern-button' key='delete-pattern-button' onClick={this.deletePattern}>Delete Pattern</button>
           <Song>
             <TrackContainer 
                 updateSteps={(steps) => {this.updateSteps(steps)}}
+                handleCreateNewTrack={this.handleCreateNewTrack}
+                handleDeleteTrack={this.handleDeleteTrack}
             />
             <PianoRollComponent 
                 updateSteps={(steps) => {this.updateSteps(steps)}}
