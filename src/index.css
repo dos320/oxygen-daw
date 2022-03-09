@@ -1061,6 +1061,13 @@ caption {
 
 }
 
+.trackControlContainer-active{
+  width: 200px;
+  border: 1px solid red;
+  position: relative;
+  background-color: lightblue;
+}
+
 .trackContainer{ /* container for both of the above*/
   border: 1px solid cyan;
   display: flex;
@@ -1078,6 +1085,7 @@ caption {
 .trackPattern{
 
 }
+
 
 /*
  * Navigation

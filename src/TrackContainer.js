@@ -15,7 +15,7 @@ class TrackControl extends Component{ // note: generally, we should always use c
     render(){ // style={}
         return(
             <>
-            <div className='trackControlContainer'>
+            <div className={this.props.className}>
                 <button 
                 key='track-name-button-1' 
                 id='track-name-button-1' 
@@ -76,6 +76,7 @@ class TrackView extends Component{
         soloActive: false,
         trackName: '',
         isTrackMuted: false,
+        isClicked: false,
     }
     state = this.initialState;
 
@@ -112,10 +113,19 @@ class TrackView extends Component{
         this.props.handleDeleteTrack(this.props.trackID); // deletes the corresponding entry in parent
     }
 
+    handleTrackClick = () =>{ // passes the trackID up to the app level
+        this.props.onClick(this.props.trackID);
+        // change class of trackControl
+        //let clicked = false;
+        //if(this.props.currentSelectedTrackID == this.props.trackID) clicked = true;
+        //this.setState({isClicked: clicked}); // TODO: fix this... need to keep track of this at the high level. currently doesnt reset
+    }
+
     render(){ // create new TrackPatterns inside the track
         return(
-            <div className='trackContainer'>   
+            <div className='trackContainer' onClick={this.handleTrackClick}>   
                 <TrackControl
+                className={this.props.currentSelectedTrackID == this.props.trackID ? 'trackControlContainer-active' : 'trackControlContainer'}
                 handleMuteButtonClick={this.handleMuteButtonClick}
                 handleSoloButtonClick={this.handleSoloButtonClick}
                 handleDeleteButtonClick={this.handleDeleteButtonClick}
@@ -150,7 +160,8 @@ class TrackContainer extends Component{
             'track-1',
             'track-2',
             'track-3',
-        ]
+        ],
+        currentSelectedTrackID: '',
     };
     state = this.initialState;
 
@@ -187,6 +198,19 @@ class TrackContainer extends Component{
         this.setState({currentTrackIds: tempTrackIds});
     }
 
+    // maybe move this to only the TrackControl? TODO: check if it works
+    handleTrackClick = (trackID) =>{
+        // change class of trackcontrol
+        // set currentSelectedTrackID to this track
+        console.log(trackID + " clicked");
+        this.props.handleTrackClick(trackID);
+        this.setState({currentSelectedTrackID: trackID});
+    }
+
+    //getTrackID = (trackID) =>{
+    //    this.setState({currentSelectedTrackID: trackID});
+    //}
+
     // upon clicking the solo button, we want to send to the trackcontainer the trackID (add this trackid in trackview)
     // after receiving the trackID, we want to use a function in trackcontainer to look through each trackview
     // and call the mute function in each (except for the one that is solo)
@@ -205,7 +229,9 @@ class TrackContainer extends Component{
     render(){
         var tracksToRender = [];
         for(var i = 0; i<this.state.currentTrackIds.length; i++){
-            tracksToRender.push(<TrackView 
+            tracksToRender.push(<TrackView
+                                    onClick={this.handleTrackClick}
+                                    currentSelectedTrackID={this.state.currentSelectedTrackID}
                                     currentSoloTrack={this.state.currentSoloTrack}
                                     handleSoloTrackChange={this.handleSoloTrackChange}
                                     handleDeleteTrack={this.handleDeleteTrack}

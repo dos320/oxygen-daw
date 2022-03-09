@@ -72,6 +72,10 @@ class App extends React.Component {
         }
         this.setState({currentSteps: currentSteps});
     }
+
+    handleTrackClick = (trackID) =>{
+        this.setState({currentSelectedTrackID: trackID});
+    }
     
     state = {
         characters: [
@@ -116,6 +120,7 @@ class App extends React.Component {
                 updateSteps={(steps) => {this.updateSteps(steps)}}
                 handleCreateNewTrack={this.handleCreateNewTrack}
                 handleDeleteTrack={this.handleDeleteTrack}
+                handleTrackClick={this.handleTrackClick}
             />
             <PianoRollComponent 
                 updateSteps={(steps) => {this.updateSteps(steps)}}
