@@ -33,7 +33,7 @@ class App extends React.Component {
     createNewPattern = () =>{
         let currentSteps = this.state.currentSteps;
         
-        const patternIDString = "pattern-" + this.state.numPatterns; 
+        const patternIDString = "pattern-" + this.state.numPatterns; // might want to use randomly generated pattern names here 
         let foundIndex = 0;
         
         for(let i = 0; i<currentSteps.length; i++){
@@ -43,12 +43,20 @@ class App extends React.Component {
             }
         }
 
+        console.log(patternIDString);
         // create a new 8 step pattern by default
         currentSteps[foundIndex].trackSteps.push({
-            patternID: patternIDString, 
+            patternID: currentSteps[foundIndex].trackID + '-' + patternIDString, 
             pattern: [null, null, null, null, null, null, null, null]
         }) 
-        this.setState({currentSteps: currentSteps, numPatterns: this.state.numPatterns+1});
+        this.setState({
+            currentSteps: currentSteps, 
+            numPatterns: this.state.numPatterns+1,
+            newPatternID: patternIDString,
+        });
+
+        // generate new pattern inside trackView
+        
     }
     
     // find and remove the selected pattern from currentSteps
@@ -75,6 +83,12 @@ class App extends React.Component {
 
     handleTrackClick = (trackID) =>{
         this.setState({currentSelectedTrackID: trackID});
+    }
+
+    // use this to also to set the notes in the pattern depending on the piano roll
+    handlePatternClick = (patternID) =>{
+        console.log(patternID)
+        this.setState({currentSelectedPatternID: patternID});
     }
     
     state = {
@@ -104,7 +118,9 @@ class App extends React.Component {
             {trackID: 'track-3', trackSteps: []},
         ], 
         currentSelectedTrackID: 'track-1', // use to check which track to insert pattern TODO: need to change this depending on which track is selected... maybe add an onclick or something for the trackcontainer
-        numPatterns: 0, 
+        numPatterns: 0,
+        newPatternID: '',
+        currentSelectedPatternID: '',
     }
     render() {
         const {characters} = this.state; // why does this break without braces???
@@ -112,15 +128,18 @@ class App extends React.Component {
         <div className="container">
           <h1>Oxygen</h1>
           <Table characterData={characters} removeCharacter={this.removeCharacter}/>
-          <SimpleComponent/>
           <button id='new-pattern-button' key='new-pattern-button' onClick={this.createNewPattern}>New Pattern</button>
           <button id='delete-pattern-button' key='delete-pattern-button' onClick={this.deletePattern}>Delete Pattern</button>
           <Song>
             <TrackContainer 
+                handlePatternClick={this.handlePatternClick}
+                newPatternID={this.state.newPatternID} // need to update this to track-#-pattern#
+                currentSteps={this.state.currentSteps}
                 updateSteps={(steps) => {this.updateSteps(steps)}}
                 handleCreateNewTrack={this.handleCreateNewTrack}
                 handleDeleteTrack={this.handleDeleteTrack}
                 handleTrackClick={this.handleTrackClick}
+                currentSelectedPatternID={this.state.currentSelectedPatternID}
             />
             <PianoRollComponent 
                 updateSteps={(steps) => {this.updateSteps(steps)}}

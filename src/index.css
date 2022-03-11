@@ -990,7 +990,7 @@ tfoot th {
   border-top: 2px solid #dedede;
 }
 
-td {
+/*td {
   border-bottom: 1px solid #dedede;
 }
 
@@ -998,7 +998,7 @@ th,
 td {
   text-align: left;
   padding: 0.5rem;
-}
+}*/
 
 caption {
   padding: 1rem 0;
@@ -1048,11 +1048,7 @@ caption {
   background:grey;
 }
 
-.trackPatternContainer{
-  background-color: darkgrey;
-  border: 1px solid green;
-  flex: 1 1 auto;
-}
+
 
 .trackControlContainer{
   width: 200px;
@@ -1081,8 +1077,42 @@ caption {
   flex-direction: column;*/
 }
 
+.trackPatternContainer{
+  background-color: darkgrey;
+  border: 1px solid green;
+  flex: 1 1 auto;
+}
+
 /* styling for patterns that go inside the trackPatternContainer */
 .trackPattern{
+  border: 1px solid rgb(41, 41, 41);
+  float: left;
+  margin-left: 0;
+  margin-right: 0;
+  height: 100%;
+  width: 300px;
+}
+
+.trackPattern-active{
+  border: 1px solid rgb(41, 41, 41);
+  float: left;
+  margin-left: 0;
+  margin-right: 0;
+  height: 100%;
+  width: 300px;
+  background-color: black;
+}
+
+.pattern-td{
+  
+}
+
+/* use this for cells that are to be filled */
+.pattern-td-filled{
+
+}
+
+.pattern-tr{
 
 }
 
