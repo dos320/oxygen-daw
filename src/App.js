@@ -5,6 +5,7 @@ import PianoRollComponent from './PianoRollComponent';
 import SimpleComponent from './ClassComponent';
 import TrackContainer from './TrackContainer';
 import {Song, Track, Instrument, Effect} from 'reactronica';
+import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
 
 
 
@@ -33,7 +34,12 @@ class App extends React.Component {
     createNewPattern = () =>{
         let currentSteps = this.state.currentSteps;
         
-        const patternIDString = "pattern-" + this.state.numPatterns; // might want to use randomly generated pattern names here 
+        
+        const patternIDString = "pattern-" + this.state.numPatterns[this.state.numPatterns.findIndex((element)=> {
+            //console.log(trackID)
+            //console.log(this.state.currentSelectedTrackID)
+            return element.trackID === this.state.currentSelectedTrackID;
+        })].num; // might want to use randomly generated pattern names here 
         let foundIndex = 0;
         
         for(let i = 0; i<currentSteps.length; i++){
@@ -42,16 +48,25 @@ class App extends React.Component {
                 break;
             }
         }
+        
+        // adding one to numPatterns
+        let tempNumPatterns = this.state.numPatterns;
+        let foundNumPatternsIndex = tempNumPatterns.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        
+        tempNumPatterns[foundNumPatternsIndex].num++;
 
         console.log(patternIDString);
         // create a new 8 step pattern by default
         currentSteps[foundIndex].trackSteps.push({
             patternID: currentSteps[foundIndex].trackID + '-' + patternIDString, 
-            pattern: [[], [], [], [], [], [], [], []]
+            pattern: [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         }) 
         this.setState({
             currentSteps: currentSteps, 
-            numPatterns: this.state.numPatterns+1,
+            //numPatterns: this.state.numPatterns+1,
+            numPatterns: tempNumPatterns,
             newPatternID: patternIDString,
         });
 
@@ -100,7 +115,8 @@ class App extends React.Component {
                     return element.patternID === this.state.currentSelectedPatternID;
                 });
                 console.log(foundPattern);
-                this.setState({currentPianoRollSteps: foundPattern.pattern});
+                
+                if(foundPattern !== undefined) this.setState({currentPianoRollSteps: foundPattern.pattern});
                 // after this, changes in the piano roll are reflected on the pattern, instead of vice versa
             });
             
@@ -111,11 +127,13 @@ class App extends React.Component {
         this.setState({currentPianoRollSteps: steps},
             ()=>{
                 // update currently selected pattern with new steps
-                this.state.currentSteps.find(element => {
+                let tempCurrentSteps = this.state.currentSteps;
+                tempCurrentSteps.find(element => {
                     return element.trackID === this.state.currentSelectedTrackID;
                 }).trackSteps.find(element => {
                     return element.patternID === this.state.currentSelectedPatternID;
                 }).pattern = steps;
+                this.setState({currentSteps: tempCurrentSteps});
             });
     }
 
@@ -146,7 +164,11 @@ class App extends React.Component {
             {trackID: 'track-3', trackSteps: []},
         ], 
         currentSelectedTrackID: 'track-1', // use to check which track to insert pattern TODO: need to change this depending on which track is selected... maybe add an onclick or something for the trackcontainer
-        numPatterns: 0,
+        numPatterns: [
+            {trackID: 'track-1', num: 0},
+            {trackID: 'track-2', num: 0},
+            {trackID: 'track-3', num: 0},
+        ],
         newPatternID: '',
         currentSelectedPatternID: '',
         currentPianoRollSteps: [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
