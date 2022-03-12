@@ -5,6 +5,9 @@ import {Song, Track, Instrument} from 'reactronica';
 import { Filter } from 'tone';
 import TrackPattern from './TrackPattern';
 
+var noteNames =     ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+                            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4']
+
 // control bar on the left hand side of the track
 class TrackControl extends Component{ // note: generally, we should always use class components when dealing with state
     constructor(props){
@@ -53,22 +56,30 @@ class TrackControl extends Component{ // note: generally, we should always use c
 class TrackPatternContainer extends Component{ 
     constructor(props){
         super(props);
+
+        
     }
+
     initialState = {
-         // same as totalSteps in the piano component
+        // same as totalSteps in the piano component
         totalSteps: 16,
         totalKeys: 24,
         patternsToRender:[],
         //clickedPatternID: '',
         //patternIDsActive:[],
+        activeSteps:[],
     };
     state = this.initialState;
     
+    
+    // on click
+    // send notes to piano roll (upwards)
+    // establish connection with piano roll
     handlePatternClickHelper = (e) =>{
         console.log("test" + e.target.id);
         this.props.handlePatternClick(e.target.id); // how does this work
         
-        let tmp = this.state.patternIDsActive;
+        //let tmp = this.state.patternIDsActive;
         //for(let i = 0; i<tmp.length; i++){
             //if(tmp[i].patternID === e.target.id) tmp[i].active = true;
             //else tmp[i].active = false;
@@ -80,32 +91,65 @@ class TrackPatternContainer extends Component{
     // generate patterns here
     render(){
         let patternsToRender = [];
-        let patternIDsActive = [];
+        let activeSteps = [];
+        // serves to populate activeSteps 
+        for(let i = 0; i<this.props.currentTrackSteps.trackSteps.length; i++){
+            activeSteps.push([...Array(24)].map(e => Array(16).fill(false))); // push empty 16x24 array for each new pattern
+            console.log(this.props.currentTrackSteps.trackSteps[i].pattern)
+            for(let j = 0; j<this.props.currentTrackSteps.trackSteps[i].pattern.length; j++){
+                if(this.props.currentTrackSteps.trackSteps[i].pattern[j].length > 0 && this.props.currentTrackSteps.trackSteps[i].pattern[j].length !== null){
+                    for(let k = 0; k<this.props.currentTrackSteps.trackSteps[i].pattern[j].length; k++){
+                        console.log("pattern below")
+                        console.log(this.props.currentTrackSteps.trackSteps[i].pattern[j][k])
+                        let foundIndex = noteNames.indexOf(this.props.currentTrackSteps.trackSteps[i].pattern[j][k]);
+                        if(foundIndex != -1) activeSteps[i][j][foundIndex] = true;
+                    }
+                }
+            }
+            console.log(activeSteps);
+        }
+        
+        
+        // ### pattern
         for(let i = 0; i<this.props.currentTrackSteps.trackSteps.length; i++){
             // generate table(patterns)
             // TODO: add the proper steps to each pattern
             let rows=[];
             let patternIDString = this.props.newPatternID;
-            for(let j = 0; j<this.state.totalKeys; j++){
+            activeSteps.push([]);
+            // ### pattern rows
+            for(let j = this.state.totalKeys; j>=0; j--){ // this must be in reverse for the lines to be rendered UPWARDS
                 // we can simply add an ordering property later IF moving around patterns is permitted
                 //let rowID = `${patternIDString}-row${i}`;
                 let rowID = 'pattern' + i + '-row' + j;
                 let cell = [];
+                // ### pattern cells
                 for(let idx = 0; idx < this.state.totalSteps; idx++){
                     //let cellID = `${patternIDString}-cell${i}-${idx}`;
                     let cellID = 'pattern' + i + '-cell' + idx;
-                    cell.push(<td key={cellID} id={cellID} className='pattern-td'></td>);
+                    let filled = false;
+                    // check if empty or not - indicate with filled variable
+                    //if(this.props.currentTrackSteps.trackSteps[i].pattern[idx][j] != ''){
+                        //let foundIndex = noteNames.findIndex((element)=>{
+                            //return element === this.props.currentTrackSteps.trackSteps[i].pattern[idx][j];
+                        //});
+                        // TODO: might need to move this outside, in a separate loop to check after all the cells have already been generated
+                        
+                    //}
+                    if(activeSteps[i][idx][j]) filled = true;
+                   
+                    cell.push(<td key={cellID} id={cellID} className={filled ? 'pattern-td-filled' : 'pattern-td'}></td>);
                 }
                 rows.push(<tr key={rowID} id={rowID} className='pattern-tr'>{cell}</tr>);
             }
             // TODO: find some way to render these patterns side by side
             patternsToRender.push(
                 <div 
-                    className={this.props.currentSelectedPatternID == (this.props.trackID + '-pattern' + i) ? 'trackPattern-active' : 'trackPattern'} 
+                    className={this.props.currentSelectedPatternID == (this.props.trackID + '-pattern-' + i) ? 'trackPattern-active' : 'trackPattern'} 
                     //id={`${patternIDString}`} 
                     //key={`${patternIDString}`} 
-                    id={this.props.trackID + '-pattern' + i}
-                    key={this.props.trackID + '-pattern' + i}
+                    id={this.props.trackID + '-pattern-' + i}
+                    key={this.props.trackID + '-pattern-' + i}
                     onClick={this.handlePatternClickHelper}
                 >
                     <table id={'pattern' + i + '-table'}>
@@ -214,7 +258,7 @@ class TrackView extends Component{
                     currentTrackSteps={this.props.currentTrackSteps} 
                     newPatternID={this.props.newPatternID}
                     handlePatternClick={this.props.handlePatternClick}
-                    currentSelectedPatternID={this.props.currentSelectedPatternID}
+                    currentSelectedPatternID={this.props.currentSelectedPatternID} //TODO: figure out rendering the steps inside each pattern
                 />
             </div>
         );
@@ -319,6 +363,7 @@ class TrackContainer extends Component{
                                     currentTrackSteps={this.props.currentSteps[i]}
                                     newPatternID={this.props.newPatternID}
                                     currentSelectedPatternID={this.props.currentSelectedPatternID}
+                                    currentPianoSteps={this.props.currentPianoSteps}
                                     />
                                 )
         }   

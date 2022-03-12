@@ -30,7 +30,8 @@ class PianoRoll extends Component{
             totalKeys: 24,
             pianoButtonStyle: "piano-roll-button-unclicked",
             pianoButtons: tmp, // todo: change this into a 1d array -- done?
-            steps: steps,
+            //steps: steps,
+            steps: this.props.currentPianoRollSteps,
         };
     }
 
@@ -177,10 +178,14 @@ const PianoRollComponent = (props) =>{
 
     return(
         <>
-        <button onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying? 'Stop' : 'Play'}</button>
+        <button onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying? 'Stop Playing Pattern' : 'Play Pattern'}</button>
         <PianoRoll
+            currentPianoRollSteps={props.currentPianoRollSteps}
             currentStepIndex={currentStepIndex}
-            setSteps={(steps) => setSteps(steps)} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
+            setSteps={(steps) => {
+                setSteps(steps);
+                props.updateCurrentPianoRollSteps(steps);
+            }} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
         />
 
         <Song isPlaying={isPlaying}>

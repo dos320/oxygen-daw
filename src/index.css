@@ -1109,7 +1109,7 @@ caption {
 
 /* use this for cells that are to be filled */
 .pattern-td-filled{
-
+  background-color: #0366ee;
 }
 
 .pattern-tr{

@@ -47,7 +47,7 @@ class App extends React.Component {
         // create a new 8 step pattern by default
         currentSteps[foundIndex].trackSteps.push({
             patternID: currentSteps[foundIndex].trackID + '-' + patternIDString, 
-            pattern: [null, null, null, null, null, null, null, null]
+            pattern: [[], [], [], [], [], [], [], []]
         }) 
         this.setState({
             currentSteps: currentSteps, 
@@ -86,11 +86,39 @@ class App extends React.Component {
     }
 
     // use this to also to set the notes in the pattern depending on the piano roll
+    // pattern -> reflected on piano
     handlePatternClick = (patternID) =>{
         console.log(patternID)
-        this.setState({currentSelectedPatternID: patternID});
+        this.setState({currentSelectedPatternID: patternID},
+            ()=>{
+                // send the corresponding pattern in currentSteps.trackSteps down to the piano roll
+        
+                // find the current selected pattern inside the current selected track
+                let foundPattern = this.state.currentSteps.find(element => {
+                    return element.trackID === this.state.currentSelectedTrackID;
+                }).trackSteps.find(element => {
+                    return element.patternID === this.state.currentSelectedPatternID;
+                });
+                console.log(foundPattern);
+                this.setState({currentPianoRollSteps: foundPattern.pattern});
+                // after this, changes in the piano roll are reflected on the pattern, instead of vice versa
+            });
+            
     }
-    
+
+    // changes on piano roll -> reflected on pattern
+    updateCurrentPianoRollSteps = (steps) =>{
+        this.setState({currentPianoRollSteps: steps},
+            ()=>{
+                // update currently selected pattern with new steps
+                this.state.currentSteps.find(element => {
+                    return element.trackID === this.state.currentSelectedTrackID;
+                }).trackSteps.find(element => {
+                    return element.patternID === this.state.currentSelectedPatternID;
+                }).pattern = steps;
+            });
+    }
+
     state = {
         characters: [
             /*{
@@ -121,6 +149,7 @@ class App extends React.Component {
         numPatterns: 0,
         newPatternID: '',
         currentSelectedPatternID: '',
+        currentPianoRollSteps: [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
     }
     render() {
         const {characters} = this.state; // why does this break without braces???
@@ -140,9 +169,11 @@ class App extends React.Component {
                 handleDeleteTrack={this.handleDeleteTrack}
                 handleTrackClick={this.handleTrackClick}
                 currentSelectedPatternID={this.state.currentSelectedPatternID}
+                currentPianoSteps={this.state.currentPianoRollSteps}
             />
             <PianoRollComponent 
-                updateSteps={(steps) => {this.updateSteps(steps)}}
+                updateCurrentPianoRollSteps={this.updateCurrentPianoRollSteps}
+                currentPianoRollSteps={this.state.currentPianoRollSteps} // used when initially clicking on pattern
             />
           </Song>
           <Form handleSubmit={this.handleSubmit}/>
