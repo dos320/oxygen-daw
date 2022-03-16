@@ -76,13 +76,26 @@ class App extends React.Component {
     
     // find and remove the selected pattern from currentSteps
     deletePattern = (patternID) =>{
-        
+        let currentSteps = this.state.currentSteps;
+        let foundIndex = currentSteps.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        console.log(foundIndex)
+        currentSteps[foundIndex].trackSteps.splice(currentSteps[foundIndex].trackSteps.findIndex((element)=>{
+            return element.patternID === patternID;
+        }), 1);
+        this.setState({currentSteps: currentSteps});
     }
 
     handleCreateNewTrack = (trackID) =>{ // we want to create a new entry in currentSteps for each new track created
         let currentSteps = this.state.currentSteps;
+        let currentNumPatterns = this.state.numPatterns;
         currentSteps.push({trackID: trackID, trackSteps: []});
-        this.setState({currentSteps: currentSteps})
+
+        // create new entry in numPatterns
+        currentNumPatterns.push({trackID: trackID, num: 0});
+
+        this.setState({currentSteps: currentSteps, numPatterns: currentNumPatterns});
     }
 
     handleDeleteTrack = (trackID) =>{
@@ -128,13 +141,20 @@ class App extends React.Component {
             ()=>{
                 // update currently selected pattern with new steps
                 let tempCurrentSteps = this.state.currentSteps;
-                tempCurrentSteps.find(element => {
-                    return element.trackID === this.state.currentSelectedTrackID;
-                }).trackSteps.find(element => {
-                    return element.patternID === this.state.currentSelectedPatternID;
-                }).pattern = steps;
-                this.setState({currentSteps: tempCurrentSteps});
+                if(tempCurrentSteps !== undefined && this.state.currentSelectedPatternID !== undefined
+                    && this.state.currentSelectedTrackID !== undefined){
+                    tempCurrentSteps.find(element => {
+                        return element.trackID === this.state.currentSelectedTrackID;
+                    }).trackSteps.find(element => {
+                        return element.patternID === this.state.currentSelectedPatternID;
+                    }).pattern = steps;
+                    this.setState({currentSteps: tempCurrentSteps});
+                }
             });
+    }
+
+    handleAppLevelPlayButtonClick = () =>{
+        this.setState({isPlaying: !this.state.isPlaying});
     }
 
     state = {
@@ -172,16 +192,24 @@ class App extends React.Component {
         newPatternID: '',
         currentSelectedPatternID: '',
         currentPianoRollSteps: [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
+        isPlaying: false,
     }
     render() {
         const {characters} = this.state; // why does this break without braces???
       return(
         <div className="container">
           <h1>Oxygen</h1>
-          <Table characterData={characters} removeCharacter={this.removeCharacter}/>
+          <div id='app-level-buttons'>
+            <button onClick={this.handleAppLevelPlayButtonClick}>
+                <img 
+                    src={this.state.isPlaying ? "../stop.png" : "../play.png"} 
+                    className='play-stop-button'
+                />
+            </button>  
+          </div>
           <button id='new-pattern-button' key='new-pattern-button' onClick={this.createNewPattern}>New Pattern</button>
           <button id='delete-pattern-button' key='delete-pattern-button' onClick={this.deletePattern}>Delete Pattern</button>
-          <Song>
+          <Song isPlaying={this.state.isPlaying}>
             <TrackContainer 
                 handlePatternClick={this.handlePatternClick}
                 newPatternID={this.state.newPatternID} // need to update this to track-#-pattern#
@@ -193,12 +221,12 @@ class App extends React.Component {
                 currentSelectedPatternID={this.state.currentSelectedPatternID}
                 currentPianoSteps={this.state.currentPianoRollSteps}
             />
-            <PianoRollComponent 
+            
+          </Song>
+          <PianoRollComponent 
                 updateCurrentPianoRollSteps={this.updateCurrentPianoRollSteps}
                 currentPianoRollSteps={this.state.currentPianoRollSteps} // used when initially clicking on pattern
             />
-          </Song>
-          <Form handleSubmit={this.handleSubmit}/>
         </div>
       )
     }

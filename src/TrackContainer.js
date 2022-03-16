@@ -142,7 +142,7 @@ class TrackPatternContainer extends Component{
                 }
                 rows.push(<tr key={rowID} id={rowID} className='pattern-tr'>{cell}</tr>);
             }
-            // TODO: find some way to render these patterns side by side
+            // TODO: find some way to render these patterns side by side -- done.
             patternsToRender.push(
                 <div 
                     className={this.props.currentSelectedPatternID == (this.props.trackID + '-pattern-' + i) ? 'trackPattern-active' : 'trackPattern'} 
@@ -190,6 +190,7 @@ class TrackView extends Component{
         trackName: '',
         isTrackMuted: false,
         isClicked: false,
+        stepsToPlay: [],
     }
     state = this.initialState;
 
@@ -234,7 +235,32 @@ class TrackView extends Component{
         //this.setState({isClicked: clicked}); // TODO: fix this... need to keep track of this at the high level. currently doesnt reset
     }
 
+    /*componentDidUpdate(prevProps){
+        console.log(prevProps.currentTrackStepsSteps)
+        console.log(this.props.currentTrackStepsSteps)
+        if(prevProps.currentTrackStepsSteps !== this.props.currentTrackStepsSteps){
+            //console.log("here1")
+            // generate the steps to play here
+            let tempSteps = this.props.currentTrackStepsSteps;
+            let stepsToPlay = [];
+            for(let i = 0; i<tempSteps.length; i++){
+                stepsToPlay.push(tempSteps.pattern);
+            }
+            //console.log(tempSteps)
+            this.setState({stepsToPlay: stepsToPlay});
+
+        }
+    }*/
+
     render(){ // create new TrackPatterns inside the track
+        // generate the steps to play here
+        //let tempSteps = this.props.currentTrackSteps.trackSteps;
+        //let stepsToPlay = [];
+        //for(let i = 0; i<tempSteps.length; i++){
+        //    stepsToPlay.push(tempSteps.pattern);
+        //}
+        //this.setState();
+
         return(
             <div className='trackContainer' onClick={this.handleTrackClick}>   
                 <TrackControl
@@ -251,6 +277,7 @@ class TrackView extends Component{
                 volume={-3}
                 pan={0}
                 mute={this.state.isTrackMuted ? true : false}
+                steps={this.props.currentTrackStepsSteps}
                 >
                 </Track>
                 <TrackPatternContainer 
@@ -326,6 +353,19 @@ class TrackContainer extends Component{
         this.setState({currentSelectedTrackID: trackID});
     }
 
+    handleTrackStepsStepsGeneration = (steps) => {
+        // generate the steps to play here
+        
+        let stepsToPlay = [];
+        for(let i = 0; i<steps.length; i++){
+            console.log(steps[i].pattern);
+            for(let j = 0; j<steps[i].pattern.length; j++){
+                stepsToPlay.push(steps[i].pattern[j]);
+            }
+        }
+        return stepsToPlay;
+    }
+
     //getTrackID = (trackID) =>{
     //    this.setState({currentSelectedTrackID: trackID});
     //}
@@ -347,6 +387,8 @@ class TrackContainer extends Component{
 
     render(){
         var tracksToRender = [];
+        
+        // renders depending on how many trackIDs there are. removing a track means removing a track id
         for(var i = 0; i<this.state.currentTrackIds.length; i++){
             //let currentTrackSteps = this.props.currentSteps.find(element =>{
                 //return element.trackID === 'track-' + i;
@@ -361,6 +403,7 @@ class TrackContainer extends Component{
                                     trackID={this.state.currentTrackIds[i]}
                                     key={this.state.currentTrackIds[i]}
                                     currentTrackSteps={this.props.currentSteps[i]}
+                                    currentTrackStepsSteps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))}
                                     newPatternID={this.props.newPatternID}
                                     currentSelectedPatternID={this.props.currentSelectedPatternID}
                                     currentPianoSteps={this.props.currentPianoSteps}
