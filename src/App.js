@@ -209,7 +209,7 @@ class App extends React.Component {
           </div>
           <button id='new-pattern-button' key='new-pattern-button' onClick={this.createNewPattern}>New Pattern</button>
           <button id='delete-pattern-button' key='delete-pattern-button' onClick={this.deletePattern}>Delete Pattern</button>
-          <Song isPlaying={this.state.isPlaying}>
+          
             <TrackContainer 
                 handlePatternClick={this.handlePatternClick}
                 newPatternID={this.state.newPatternID} // need to update this to track-#-pattern#
@@ -220,9 +220,11 @@ class App extends React.Component {
                 handleTrackClick={this.handleTrackClick}
                 currentSelectedPatternID={this.state.currentSelectedPatternID}
                 currentPianoSteps={this.state.currentPianoRollSteps}
-            />
+                isSongPlaying={this.state.isPlaying}
+            >
+            </TrackContainer>
             
-          </Song>
+          
           <PianoRollComponent 
                 updateCurrentPianoRollSteps={this.updateCurrentPianoRollSteps}
                 currentPianoRollSteps={this.state.currentPianoRollSteps} // used when initially clicking on pattern

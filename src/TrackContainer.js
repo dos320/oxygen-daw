@@ -1,3 +1,4 @@
+import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
 import { render } from '@testing-library/react';
 import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
 import React, { Component, useState } from 'react';
@@ -36,8 +37,10 @@ class TrackControl extends Component{ // note: generally, we should always use c
                 <button 
                 key='track-solo-button-1' 
                 id='track-solo-button-1'
-                className={this.props.soloActive ? 'trackButton-active':'trackButton-inactive'}
-                onClick={this.props.handleSoloButtonClick}>
+                className={(this.props.soloActive) ? 'trackButton-active': (this.props.currentSoloTrack !== this.props.trackID && this.props.currentSoloTrack !== '') ? 'solo-button-disabled' : 'trackButton-inactive'}
+                onClick={this.props.handleSoloButtonClick}
+                disabled={(this.props.currentSoloTrack !== this.props.trackID && this.props.currentSoloTrack !== '') ? true : false}
+                >
                     Solo
                 </button>
                 <button 
@@ -199,10 +202,11 @@ class TrackView extends Component{
         // change style of clicked button (done, as the className is set to the appropriate class)
         let muteActive = !this.state.muteActive;
 
-        this.setState({muteActive});
+        this.setState({muteActive}); // change style
         //this.
 
         this.handleMute();
+        this.props.handleMuted(this.props.trackID); 
     }
     
     handleSoloButtonClick = () =>{
@@ -212,7 +216,7 @@ class TrackView extends Component{
         else this.props.handleSoloTrackChange('');
 
         this.handleMute(); // need to call this after both mute and solo button clicks
-        
+        this.props.handleSolo(this.props.trackID); // mutes every track but this track, indicated by the trackID
     }
 
     handleMute = () =>{
@@ -271,15 +275,12 @@ class TrackView extends Component{
                 trackName={this.state.trackName}
                 muteActive={this.state.muteActive}
                 soloActive={this.state.soloActive}
+                handleMuted={this.props.handleMuted}
+                currentSoloTrack={this.props.currentSoloTrack}
+                trackID={this.props.trackID}
                 >
                 </TrackControl>    
-                <Track
-                volume={-3}
-                pan={0}
-                mute={this.state.isTrackMuted ? true : false}
-                steps={this.props.currentTrackStepsSteps}
-                >
-                </Track>
+                
                 <TrackPatternContainer 
                     trackID={this.props.trackID}
                     currentTrackSteps={this.props.currentTrackSteps} 
@@ -300,7 +301,11 @@ class TrackContainer extends Component{
     }
     
     initialState={ // note: must add new entries to these upon creating a new track?
-        mutedTracks: [],
+        mutedTracks: [
+            {trackID: 'track-1', muted: false},
+            {trackID: 'track-2', muted: false},
+            {trackID: 'track-3', muted: false},
+        ],
         currentSoloTrack: '',
         currentTrackIds: [
             'track-1',
@@ -308,13 +313,30 @@ class TrackContainer extends Component{
             'track-3',
         ],
         currentSelectedTrackID: '',
+        generatedTrackID: 3, // scuffed solution, ensures that every generated track key is unique
     };
     state = this.initialState;
 
+    // keep track of muted status for each track in an array
     handleMuted = (trackID) =>{
         let tempMutedTracks = this.state.mutedTracks; // currently working with refs... come back later
-        
-        
+        let foundIndex = tempMutedTracks.findIndex((element)=>{
+            return element.trackID === trackID;
+        });
+        tempMutedTracks[foundIndex].muted = !tempMutedTracks[foundIndex].muted;
+        this.setState({mutedTracks: tempMutedTracks});
+    }
+
+    // mute every track but the given track, indicated by the provided trackID
+    handleSolo = (trackID) =>{
+        let tempMutedTracks = this.state.mutedTracks;
+        for(let i = 0; i<tempMutedTracks.length; i++){
+            if(tempMutedTracks[i].trackID !== trackID){
+                tempMutedTracks[i].muted = !tempMutedTracks[i].muted;
+            } 
+        }
+        console.log(tempMutedTracks);
+        this.setState({mutedTracks: tempMutedTracks});
     }
 
     handleSoloTrackChange = (trackID) =>{
@@ -324,15 +346,20 @@ class TrackContainer extends Component{
     handleNewTrack = () =>{
         console.log("here")
         let tempTrackIds = this.state.currentTrackIds;
-        tempTrackIds.push('track-' + (this.state.currentTrackIds.length + 1));
+        let tempMutedTracks = this.state.mutedTracks; // also add an entry to mutedTracks
+        let tempGeneratedTrackID = this.state.generatedTrackID;
+        tempTrackIds.push('track-' + (tempGeneratedTrackID + 1)); // save in state after
         console.log(tempTrackIds);
         this.props.handleCreateNewTrack(tempTrackIds[tempTrackIds.length-1]); // creates new track entry in parent state for keeping track of patterns
         
-        this.setState({currentTrackIds: tempTrackIds});
+        tempMutedTracks.push({trackID: 'track-' + (tempGeneratedTrackID + 1), muted: false});
+
+        this.setState({currentTrackIds: tempTrackIds, mutedTracks: tempMutedTracks, generatedTrackID: tempGeneratedTrackID+1});
     }
 
     handleDeleteTrack = (trackID) =>{
         let tempTrackIds = this.state.currentTrackIds;
+        let tempMutedTracks = this.state.mutedTracks;
         for(var i = 0; i<this.state.currentTrackIds.length; i++){
             console.log(this.state.currentTrackIds[i] == trackID);
             if(this.state.currentTrackIds[i] == trackID){
@@ -340,8 +367,15 @@ class TrackContainer extends Component{
                 break;
             } 
         }
+        // remove track from mutedTracks
+        for(let i = 0; i<this.state.mutedTracks.length; i++){
+            if(this.state.mutedTracks[i].trackID === trackID){
+                tempMutedTracks.splice(i, 1);
+                break;
+            }
+        }
         this.props.handleDeleteTrack(trackID);
-        this.setState({currentTrackIds: tempTrackIds});
+        this.setState({currentTrackIds: tempTrackIds, mutedTracks: tempMutedTracks});
     }
 
     // maybe move this to only the TrackControl? TODO: check if it works
@@ -364,6 +398,14 @@ class TrackContainer extends Component{
             }
         }
         return stepsToPlay;
+    }
+
+    findTrackMuteStatus = (trackID) =>{
+        let foundIndex = this.state.mutedTracks.findIndex((element)=>{
+            return element.trackID === trackID;
+        });
+
+        return this.state.mutedTracks[foundIndex].muted;
     }
 
     //getTrackID = (trackID) =>{
@@ -393,28 +435,40 @@ class TrackContainer extends Component{
             //let currentTrackSteps = this.props.currentSteps.find(element =>{
                 //return element.trackID === 'track-' + i;
             //});
-            tracksToRender.push(<TrackView
-                                    onClick={this.handleTrackClick}
-                                    handlePatternClick={this.props.handlePatternClick}
-                                    currentSelectedTrackID={this.state.currentSelectedTrackID}
-                                    currentSoloTrack={this.state.currentSoloTrack}
-                                    handleSoloTrackChange={this.handleSoloTrackChange}
-                                    handleDeleteTrack={this.handleDeleteTrack}
-                                    trackID={this.state.currentTrackIds[i]}
+            tracksToRender.push(<Track
+                                    volume={-3}
+                                    pan={0}
+                                    mute={this.findTrackMuteStatus(this.state.currentTrackIds[i]) ? true : false} // need to create new funciton for this
+                                    steps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))} // need to fix this
                                     key={this.state.currentTrackIds[i]}
-                                    currentTrackSteps={this.props.currentSteps[i]}
-                                    currentTrackStepsSteps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))}
-                                    newPatternID={this.props.newPatternID}
-                                    currentSelectedPatternID={this.props.currentSelectedPatternID}
-                                    currentPianoSteps={this.props.currentPianoSteps}
+                                >
+                                    <Instrument type='synth'></Instrument>
+                                    <TrackView
+                                        onClick={this.handleTrackClick}
+                                        handlePatternClick={this.props.handlePatternClick}
+                                        currentSelectedTrackID={this.state.currentSelectedTrackID}
+                                        currentSoloTrack={this.state.currentSoloTrack}
+                                        handleSoloTrackChange={this.handleSoloTrackChange}
+                                        handleDeleteTrack={this.handleDeleteTrack}
+                                        trackID={this.state.currentTrackIds[i]}
+                                        currentTrackSteps={this.props.currentSteps[i]}
+                                        newPatternID={this.props.newPatternID}
+                                        currentSelectedPatternID={this.props.currentSelectedPatternID}
+                                        currentPianoSteps={this.props.currentPianoSteps}
+                                        handleMuted={this.handleMuted}
+                                        handleSolo={this.handleSolo}
                                     />
+                                </Track>
                                 )
         }   
         return(
-            <div className='multitrackContainer'>
-                {tracksToRender}
-                <button onClick={this.handleNewTrack}>New Track</button>
-            </div>
+            
+                <div className='multitrackContainer'>
+                    <Song isPlaying={this.props.isSongPlaying}>
+                        {tracksToRender}
+                    </Song>
+                    <button onClick={this.handleNewTrack}>New Track</button>
+                </div>
             
         );
     }
