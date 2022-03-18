@@ -5,6 +5,7 @@ import {Song, Track, Instrument} from 'reactronica';
 
 var noteNames =     ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
                             'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4']
+var defaultPianoButtons = [];
 
 class PianoRoll extends Component{
     constructor(props){
@@ -17,6 +18,9 @@ class PianoRoll extends Component{
                 tmp.push(
                     {name: buttonID, isActive: false}
                 );
+                defaultPianoButtons.push(
+                    {name: buttonID, isActive: false}
+                ); // populate default pianobuttons array
             }
         }
 
@@ -30,56 +34,88 @@ class PianoRoll extends Component{
             totalKeys: 24,
             pianoButtonStyle: "piano-roll-button-unclicked",
             pianoButtons: tmp, // todo: change this into a 1d array -- done?
-            steps: steps,
+            //steps: steps,
+            steps: this.props.currentPianoRollSteps,
         };
     }
 
     changePianoButtonStyle = (e) =>{
-        const buttonID = e.target.id;
-        console.log(buttonID);
-        /*if(className == "piano-roll-button-unclicked"){
-            this.setState({
-                pianoButtonStyle: "piano-roll-button-clicked"
-            });
-        }else{
-            this.setState({
-                pianoButtonStyle: "piano-roll-button-unclicked"
-            });
-        }*/
-
-       let tmp = this.state.pianoButtons;
-       let tmpSteps = this.state.steps;
-       let clickedButtonIsActive = false;
-       /*let obj = tmp.filter((item)=>{
-           return item.name === buttonID
-        });*/
-        for(var i = 0; i<tmp.length; i++){
-            //console.log(tmp[0][i]);
-            //console.log(tmp[0][i].name === buttonID)
-            //console.log(tmp[0][i].name + " " + buttonID);
-            if(tmp[i].name === buttonID){
-                tmp[i].isActive = !tmp[i].isActive;
-                clickedButtonIsActive = tmp[i].isActive;
-                break;
+        // clear out pianoButtons
+        // create new Pianobuttons based on the currentPianoRollSteps
+        // setstate
+        // use componentDidUpdate after, this is kinda buggy as updating only occurs after clicking on a button (not after clicking on pattern)
+        let tempButtons = JSON.parse(JSON.stringify(defaultPianoButtons)); // deep copy
+        console.log("tmp below this")
+        console.log(defaultPianoButtons);
+        for(let i = 0; i<this.props.currentPianoRollSteps.length; i++){
+            for(let j = 0; j<this.props.currentPianoRollSteps[i].length; j++){
+                if(this.props.currentPianoRollSteps[i].length > 0){
+                    tempButtons[tempButtons.findIndex((button)=>{
+                        let split = button.name.split('-') // e.g., "pianobutton-C3-0"
+                        //console.log("split[1] === this.props.currentPianoRollSteps[i][j]: " + (split[1] === this.props.currentPianoRollSteps[i][j]))
+                        //console.log("split[2] === i: " + (split[2] === i))
+                        //console.log(split[2])
+                        //console.log(i)
+                        return split[1] === this.props.currentPianoRollSteps[i][j] && split[2] == i;
+                    })].isActive = true;
+                } // all other entries are false by default
             }
         }
-       console.log(tmpSteps);
 
-       // add to steps upon activating, or removing upon deactivating
-       let columnNum = buttonID.split('-')[2];
-       let noteName = buttonID.split('-')[1];
-       if(clickedButtonIsActive){
-           tmpSteps[columnNum].push(noteName);
-       }else{
-           // loop through the columnNum and find the noteName to remove
-           for(var i = 0; i<tmpSteps[columnNum].length; i++){
-               if(tmpSteps[columnNum][i] === noteName){
-                    tmpSteps[columnNum].splice(i, 1); // remove inactive button
-               }
-           }
-       }
-       this.props.setSteps(tmpSteps);
-       this.setState({pianoButtons: tmp});
+        this.setState({
+            steps: this.props.currentPianoRollSteps,
+            pianoButtons: tempButtons,
+        }, ()=>{
+            const buttonID = e.target.id;
+            console.log(buttonID);
+            /*if(className == "piano-roll-button-unclicked"){
+                this.setState({
+                    pianoButtonStyle: "piano-roll-button-clicked"
+                });
+            }else{
+                this.setState({
+                    pianoButtonStyle: "piano-roll-button-unclicked"
+                });
+            }*/
+
+            let tmp = this.state.pianoButtons;
+            let tmpSteps = this.state.steps;
+            let clickedButtonIsActive = false;
+            
+            //console.log(tmp);
+            /*let obj = tmp.filter((item)=>{
+             return item.name === buttonID
+            });*/
+            // if button activated, set active 
+            for(var i = 0; i<tmp.length; i++){
+                //console.log(tmp[0][i]);
+                //console.log(tmp[0][i].name === buttonID)
+                //console.log(tmp[0][i].name + " " + buttonID);
+                if(tmp[i].name === buttonID){
+                    tmp[i].isActive = !tmp[i].isActive;
+                    clickedButtonIsActive = tmp[i].isActive;
+                    break;
+                }
+            }
+            console.log(tmpSteps);
+
+            // add to steps upon activating, or removing upon deactivating
+            let columnNum = buttonID.split('-')[2];
+            let noteName = buttonID.split('-')[1];
+            if(clickedButtonIsActive){
+                tmpSteps[columnNum].push(noteName);
+            }else{
+            // loop through the columnNum and find the noteName to remove
+                for(var i = 0; i<tmpSteps[columnNum].length; i++){
+                    if(tmpSteps[columnNum][i] === noteName){
+                        tmpSteps[columnNum].splice(i, 1); // remove inactive button
+                    }
+                }
+            }
+            this.props.setSteps(tmpSteps);
+            this.setState({pianoButtons: tmp});
+        });
+        
     }
 
     checkButtonActive = (e) =>{
@@ -177,10 +213,14 @@ const PianoRollComponent = (props) =>{
 
     return(
         <>
-        <button onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying? 'Stop' : 'Play'}</button>
+        <button onClick={()=>setIsPlaying(!isPlaying)}>{isPlaying? 'Stop Playing Pattern' : 'Play Pattern'}</button>
         <PianoRoll
+            currentPianoRollSteps={props.currentPianoRollSteps}
             currentStepIndex={currentStepIndex}
-            setSteps={(steps) => setSteps(steps)} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
+            setSteps={(steps) => {
+                setSteps(steps);
+                props.updateCurrentPianoRollSteps(steps);
+            }} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
         />
 
         <Song isPlaying={isPlaying}>

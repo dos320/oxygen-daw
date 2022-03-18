@@ -990,7 +990,7 @@ tfoot th {
   border-top: 2px solid #dedede;
 }
 
-td {
+/*td {
   border-bottom: 1px solid #dedede;
 }
 
@@ -998,7 +998,7 @@ th,
 td {
   text-align: left;
   padding: 0.5rem;
-}
+}*/
 
 caption {
   padding: 1rem 0;
@@ -1039,6 +1039,83 @@ caption {
 .pianorollheader{
   background: white;
 }
+
+.trackButton-active{
+  background:lightskyblue;
+}
+
+.trackButton-inactive{
+  background:grey;
+}
+
+
+
+.trackControlContainer{
+  width: 200px;
+  border: 1px solid red;
+  position: relative;
+
+}
+
+.trackControlContainer-active{
+  width: 200px;
+  border: 1px solid red;
+  position: relative;
+  background-color: lightblue;
+}
+
+.trackContainer{ /* container for both of the above*/
+  border: 1px solid cyan;
+  display: flex;
+  min-width: 2000px;
+}
+
+.multitrackContainer{
+  border: 5px solid black;
+  overflow-x: auto;
+  /*display: flex;
+  flex-direction: column;*/
+}
+
+.trackPatternContainer{
+  background-color: darkgrey;
+  border: 1px solid green;
+  flex: 1 1 auto;
+}
+
+/* styling for patterns that go inside the trackPatternContainer */
+.trackPattern{
+  border: 1px solid rgb(41, 41, 41);
+  float: left;
+  margin-left: 0;
+  margin-right: 0;
+  height: 100%;
+  width: 300px;
+}
+
+.trackPattern-active{
+  border: 1px solid rgb(41, 41, 41);
+  float: left;
+  margin-left: 0;
+  margin-right: 0;
+  height: 100%;
+  width: 300px;
+  background-color: black;
+}
+
+.pattern-td{
+  
+}
+
+/* use this for cells that are to be filled */
+.pattern-td-filled{
+  background-color: #0366ee;
+}
+
+.pattern-tr{
+
+}
+
 
 /*
  * Navigation
