@@ -1116,6 +1116,16 @@ caption {
 
 }
 
+.play-stop-button{
+  width: 20px;
+  height: 20px;
+}
+
+.solo-button-disabled{
+  background-color:rgb(41, 41, 41);
+  color: grey;
+}
+
 
 /*
  * Navigation
