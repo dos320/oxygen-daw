@@ -221,6 +221,7 @@ const PianoRollComponent = (props) =>{
                 setSteps(steps);
                 props.updateCurrentPianoRollSteps(steps);
             }} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
+            //currentSelectedInstrument={this.props.currentSelectedInstrument} 
         />
 
         <Song isPlaying={isPlaying}>
@@ -230,7 +231,11 @@ const PianoRollComponent = (props) =>{
                     setCurrentStepIndex(index);
                 }}
             >
-            <Instrument type="polySynth" />
+            <Instrument 
+                type={props.currentSelectedInstrument}
+                oscillator={{type: props.currentSelectedOscillator}}
+                //type='polySynth'
+            />
             </Track>
         </Song>
         </>

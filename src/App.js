@@ -6,6 +6,7 @@ import SimpleComponent from './ClassComponent';
 import TrackContainer from './TrackContainer';
 import {Song, Track, Instrument, Effect} from 'reactronica';
 import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
+import OptionsComponent from './OptionsComponent';
 
 
 
@@ -90,10 +91,27 @@ class App extends React.Component {
     handleCreateNewTrack = (trackID) =>{ // we want to create a new entry in currentSteps for each new track created
         let currentSteps = this.state.currentSteps;
         let currentNumPatterns = this.state.numPatterns;
+        let currentTrackOptions = this.state.trackOptions;
+        let currentTrackNames = this.state.trackNames;
         currentSteps.push({trackID: trackID, trackSteps: []});
 
         // create new entry in numPatterns
         currentNumPatterns.push({trackID: trackID, num: 0});
+
+        // create new entry in trackOptions
+        currentTrackOptions.push(
+            {
+                trackID: trackID,
+                currentSelectedInstrument: 'amSynth',
+                currentSelectedOscillator: 'triangle',
+                currentPolyphony: 1,
+                currentADSR:[0.2,0.2,0.2,0.2],
+                currentEffects:[],
+            },
+        );
+
+        // create new entry in trackNames
+        currentTrackNames.push({trackID: trackID, name: 'New Track'});
 
         this.setState({currentSteps: currentSteps, numPatterns: currentNumPatterns});
     }
@@ -142,7 +160,7 @@ class App extends React.Component {
                 // update currently selected pattern with new steps
                 let tempCurrentSteps = this.state.currentSteps;
                 if(tempCurrentSteps !== undefined && this.state.currentSelectedPatternID !== undefined
-                    && this.state.currentSelectedTrackID !== undefined){
+                    && this.state.currentSelectedPatternID !== '' && this.state.currentSelectedTrackID !== undefined){
                     tempCurrentSteps.find(element => {
                         return element.trackID === this.state.currentSelectedTrackID;
                     }).trackSteps.find(element => {
@@ -155,6 +173,58 @@ class App extends React.Component {
 
     handleAppLevelPlayButtonClick = () =>{
         this.setState({isPlaying: !this.state.isPlaying});
+    }
+
+    /* optioncomponent stuff */
+    setCurrentSelectedInstrument = (instrument) =>{
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackOptions[foundIndex].currentSelectedInstrument = instrument;
+        this.setState({trackOptions: tempTrackOptions})
+    }
+    setCurrentSelectedOscillator = (oscillator) =>{
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackOptions[foundIndex].currentSelectedOscillator = oscillator;
+        this.setState({trackOptions: tempTrackOptions})
+    };
+    setCurrentPolyphony = (num) =>{
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackOptions[foundIndex].currentPolyphony = num;
+        this.setState({trackOptions: tempTrackOptions});
+    };
+    setCurrentADSR = (arr) =>{
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackOptions[foundIndex].currentADSR = arr;
+        this.setState({trackOptions: tempTrackOptions});
+    };
+    setCurrentEffects = (arr) =>{
+        // find currentSelectedTrack and set its currentEFfects to arr
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        console.log(foundIndex);
+        tempTrackOptions[foundIndex].currentEffects = arr;
+        this.setState({trackOptions: tempTrackOptions})
+    } 
+    setTrackName = (name) =>{
+        let tempTrackNames = this.state.trackNames;
+        let foundIndex = this.state.trackNames.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackNames[foundIndex].name = name;
+        this.setState({trackNames: tempTrackNames});
     }
 
     state = {
@@ -183,6 +253,11 @@ class App extends React.Component {
             {trackID: 'track-2', trackSteps: []},
             {trackID: 'track-3', trackSteps: []},
         ], 
+        trackNames:[
+            {trackID: 'track-1', name: 'Track 1'},
+            {trackID: 'track-2', name: 'Track 2'},
+            {trackID: 'track-3', name: 'Track 3'},
+        ],
         currentSelectedTrackID: 'track-1', // use to check which track to insert pattern TODO: need to change this depending on which track is selected... maybe add an onclick or something for the trackcontainer
         numPatterns: [
             {trackID: 'track-1', num: 0},
@@ -193,9 +268,41 @@ class App extends React.Component {
         currentSelectedPatternID: '',
         currentPianoRollSteps: [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],
         isPlaying: false,
+        currentSelectedInstrument: 'amSynth',
+        currentSelectedOscillator: 'triangle',
+        currentPolyphony: 1,
+        currentADSR:[30,30,30,30],
+        currentEffects:[],
+        trackOptions: [ // TODO: ADD AND DELETE HERE
+            {
+                trackID: 'track-1',
+                currentSelectedInstrument: 'amSynth',
+                currentSelectedOscillator: 'triangle',
+                currentPolyphony: 1,
+                currentADSR:[0.2,0.2,0.2,0.2],
+                currentEffects:[],
+            },
+            {
+                trackID: 'track-2',
+                currentSelectedInstrument: 'amSynth',
+                currentSelectedOscillator: 'triangle',
+                currentPolyphony: 1,
+                currentADSR:[0.2,0.2,0.2,0.2],
+                currentEffects:[],
+            },
+            {
+                trackID: 'track-3',
+                currentSelectedInstrument: 'amSynth',
+                currentSelectedOscillator: 'triangle',
+                currentPolyphony: 1,
+                currentADSR:[0.2,0.2,0.2,0.2],
+                currentEffects:[],
+            },
+        ],
     }
     render() {
         const {characters} = this.state; // why does this break without braces???
+        let foundObject = this.state.trackOptions.find((element)=>{return element.trackID === this.state.currentSelectedTrackID});
       return(
         <div className="container">
           <h1>Oxygen</h1>
@@ -207,6 +314,19 @@ class App extends React.Component {
                 />
             </button>  
           </div>
+          <OptionsComponent 
+            setCurrentSelectedInstrument={this.setCurrentSelectedInstrument}
+            setCurrentSelectedOscillator={this.setCurrentSelectedOscillator}
+            setCurrentPolyphony={this.setCurrentPolyphony}
+            currentSelectedInstrument={this.state.currentSelectedInstrument}
+            setCurrentADSR={this.setCurrentADSR}
+            currentADSR={this.state.currentADSR}
+            setCurrentEffects={this.setCurrentEffects}
+            currentSelectedTrackID={this.state.currentSelectedTrackID}
+            trackOptions={this.state.trackOptions}
+            trackNames={this.state.trackNames}
+            setTrackName={this.setTrackName}
+          />
           <button id='new-pattern-button' key='new-pattern-button' onClick={this.createNewPattern}>New Pattern</button>
           <button id='delete-pattern-button' key='delete-pattern-button' onClick={this.deletePattern}>Delete Pattern</button>
           
@@ -221,6 +341,8 @@ class App extends React.Component {
                 currentSelectedPatternID={this.state.currentSelectedPatternID}
                 currentPianoSteps={this.state.currentPianoRollSteps}
                 isSongPlaying={this.state.isPlaying}
+                currentEffects={this.state.currentEffects}
+                trackOptions={this.state.trackOptions}
             >
             </TrackContainer>
             
@@ -228,6 +350,8 @@ class App extends React.Component {
           <PianoRollComponent 
                 updateCurrentPianoRollSteps={this.updateCurrentPianoRollSteps}
                 currentPianoRollSteps={this.state.currentPianoRollSteps} // used when initially clicking on pattern
+                currentSelectedInstrument={foundObject.currentSelectedInstrument}
+                currentSelectedOscillator={foundObject.currentSelectedOscillator}
             />
         </div>
       )
