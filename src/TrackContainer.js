@@ -441,7 +441,7 @@ class TrackContainer extends Component{
             //});
             let effectsToRender = [];
             let foundObject = this.props.trackOptions.find((element)=>{return element.trackID === this.state.currentTrackIds[i]})
-            console.log(foundObject)
+            //console.log(foundObject)
             if(foundObject.currentEffects.length > 0){
                 for(let i = 0; i<foundObject.currentEffects.length; i++){
                     effectsToRender.push(
@@ -452,20 +452,20 @@ class TrackContainer extends Component{
             }
             console.log(foundObject.currentSelectedOscillator);
             tracksToRender.push(<Track
-                                    volume={-3}
-                                    pan={0}
+                                    volume={foundObject.volume} // -3 is default
+                                    pan={foundObject.pan}
                                     mute={this.findTrackMuteStatus(this.state.currentTrackIds[i]) ? true : false} // need to create new funciton for this
                                     steps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))} // need to fix this
                                     key={this.state.currentTrackIds[i]}
                                 >
                                     <Instrument 
                                         type={foundObject.currentSelectedInstrument} 
-                                        //envelope={{
-                                            //attack: foundObject.currentADSR[0],
-                                            //decay: foundObject.currentADSR[1],
-                                            //sustain: foundObject.currentADSR[2],
-                                            //release: foundObject.currentADSR[3],
-                                        //}}
+                                        envelope={{
+                                            attack: foundObject.currentADSR[0],
+                                            decay: foundObject.currentADSR[1],
+                                            sustain: foundObject.currentADSR[2],
+                                            release: foundObject.currentADSR[3],
+                                        }}
                                         polyphony={foundObject.currentPolyphony}
                                         oscillator={foundObject.currentSelectedInstrument === 'membraneSynth' || foundObject.currentSelectedInstrument === 'monoSynth' || foundObject.currentSelectedInstrument === 'synth' ? {type: foundObject.currentSelectedOscillator} : null}
                                     />

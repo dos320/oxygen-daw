@@ -107,6 +107,8 @@ class App extends React.Component {
                 currentPolyphony: 1,
                 currentADSR:[0.2,0.2,0.2,0.2],
                 currentEffects:[],
+                volume: -3,
+                pan: 0,
             },
         );
 
@@ -226,6 +228,22 @@ class App extends React.Component {
         tempTrackNames[foundIndex].name = name;
         this.setState({trackNames: tempTrackNames});
     }
+    setTrackVolume = (val) =>{
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackOptions[foundIndex].volume = val;
+        this.setState({trackOptions: tempTrackOptions});
+    }
+    setTrackPan = (val) =>{
+        let tempTrackOptions = this.state.trackOptions;
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        tempTrackOptions[foundIndex].pan = val;
+        this.setState({trackOptions: tempTrackOptions});
+    }
 
     state = {
         characters: [
@@ -281,6 +299,8 @@ class App extends React.Component {
                 currentPolyphony: 1,
                 currentADSR:[0.2,0.2,0.2,0.2],
                 currentEffects:[],
+                volume: -3,
+                pan: 0,
             },
             {
                 trackID: 'track-2',
@@ -289,6 +309,8 @@ class App extends React.Component {
                 currentPolyphony: 1,
                 currentADSR:[0.2,0.2,0.2,0.2],
                 currentEffects:[],
+                volume: -3,
+                pan: 0,
             },
             {
                 trackID: 'track-3',
@@ -297,6 +319,8 @@ class App extends React.Component {
                 currentPolyphony: 1,
                 currentADSR:[0.2,0.2,0.2,0.2],
                 currentEffects:[],
+                volume: -3,
+                pan: 0,
             },
         ],
     }
@@ -326,6 +350,8 @@ class App extends React.Component {
             trackOptions={this.state.trackOptions}
             trackNames={this.state.trackNames}
             setTrackName={this.setTrackName}
+            setTrackVolume={this.setTrackVolume}
+            setTrackPan={this.setTrackPan}
           />
           <button id='new-pattern-button' key='new-pattern-button' onClick={this.createNewPattern}>New Pattern</button>
           <button id='delete-pattern-button' key='delete-pattern-button' onClick={this.deletePattern}>Delete Pattern</button>

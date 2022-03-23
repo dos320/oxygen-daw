@@ -191,6 +191,14 @@ class MainControls extends Component{
         this.props.setCurrentADSR(tempADSR);
     }
 
+    handleVolumeChange = (e) =>{
+        this.props.setTrackVolume(e.target.value);
+    }
+
+    handlePanChange = (e) =>{
+        this.props.setTrackPan(e.target.value);
+    }
+
     render(){
         let instrumentList = [
             {key: 'amSynth', name: 'AM Synth', value: 'amSynth'},
@@ -214,8 +222,23 @@ class MainControls extends Component{
         return(
             <div>
                 <DropdownList label='Instrument' items={instrumentList} setValue={this.props.setCurrentSelectedInstrument} value={this.props.trackOptions[foundIndex].currentSelectedInstrument}/>
-                <DropdownList label='Oscillator Type' items={oscillatorList} setValue={this.props.setCurrentSelectedOscillator} value={this.props.trackOptions[foundIndex].currentSelectedOscillator}/>
+                <DropdownList 
+                    label='Oscillator Type' 
+                    items={oscillatorList} 
+                    setValue={this.props.setCurrentSelectedOscillator} 
+                    value={this.props.trackOptions[foundIndex].currentSelectedOscillator} 
+                    disabled={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? false : true}
+                    className={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? null: 'dropdown:disabled'}
+                />
                 <NumberSelector label='Polyphony' setValue={this.props.setCurrentPolyphony} value={this.props.trackOptions[foundIndex].currentPolyphony}/> 
+                <label>
+                    {'Volume'}
+                    <Slider name='volume-slider' defaultValue={-3} min={-10} max={10} step={0.01} onChange={this.handleVolumeChange}/>
+                </label>
+                <label>
+                    {'Pan'}
+                    <Slider name='pan-slider' defaultValue={0} min={-100} max={100} onChange={this.handlePanChange}/>
+                </label>
                 {this.props.currentSelectedInstrument === 'sampler' ? <SampleSelector /> : null}
                 <div className={'adsr-div'}>
                     <label key='attack-slider'>
@@ -270,6 +293,8 @@ class OptionsComponent extends Component{
                         currentADSR={this.props.currentADSR}
                         currentSelectedTrackID={this.props.currentSelectedTrackID}
                         trackOptions={this.props.trackOptions}
+                        setTrackVolume={this.props.setTrackVolume}
+                        setTrackPan={this.props.setTrackPan}
                     />
                 </div>
                 <div>

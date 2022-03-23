@@ -1140,6 +1140,11 @@ caption {
   padding: 1%;
 }
 
+.dropdown:disabled{
+  background-color:grey;
+  color: grey;
+}
+
 /*
  * Navigation
  */

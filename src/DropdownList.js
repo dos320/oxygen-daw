@@ -28,7 +28,7 @@ class DropdownList extends Component{
             <div>
                 <label>
                     {this.props.label}
-                    <select value={this.props.value} onChange={this.handleValueChange}>
+                    <select value={this.props.value} onChange={this.handleValueChange} disabled={this.props.disabled} className={this.props.className}>
                         {itemsToAdd}
                     </select>
                 </label>
