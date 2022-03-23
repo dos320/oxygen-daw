@@ -29,6 +29,10 @@ class EffectContainer extends Component{
         
     }
 
+    handleEffectDelete = () => {
+        this.props.handleDeleteEffectClick(this.props.effectValue);
+    }
+
     render(){
         // <Effect type={this.props.effectName} wet={this.state.wetValue}/>
         return(
@@ -38,7 +42,7 @@ class EffectContainer extends Component{
                     Wet
                     <Slider value={this.state.wetValue} onChange={this.handleChange} min={0} max={1} step={0.01}/>
                 </label>
-                <button>Delete</button>
+                <button id='effectDeleteButton' onClick={this.handleEffectDelete}>Delete</button>
             </div>
         );
     }
@@ -88,9 +92,17 @@ class EffectsControls extends Component{
 
     handleAddEffectClick = () =>{
         let tempEffects = this.state.currentEffects;
-        tempEffects.push(this.state.effectToAdd);
-        
-        this.props.setCurrentEffects(tempEffects);
+        // look through currentEffects to search for duplicates, if duplicate, reject
+
+        let dupe = tempEffects.find((element)=>{
+            return element.key === this.state.effectToAdd.key;
+        })
+
+        if(dupe == undefined){
+            tempEffects.push(this.state.effectToAdd);
+            this.props.setCurrentEffects(tempEffects);
+        }
+        // TODO: notify the user here?
         //this.setState({currentEffects: tempEffects});
     }
 
@@ -106,16 +118,27 @@ class EffectsControls extends Component{
         //});
     }
 
+    handleDeleteEffectClick = (key) =>{
+        let tempCurrentEffects = this.state.currentEffects;
+        let foundIndex = tempCurrentEffects.findIndex((element)=>{
+            return element.key === key;
+        });
+        tempCurrentEffects.splice(foundIndex, 1);
+        this.setState({currentEffects: tempCurrentEffects});
+    }
+
     render(){
         let effectsToRender = [];
         let tempCurrentEffects = this.state.currentEffects;
         for(let i = 0; i<tempCurrentEffects.length; i++){
             effectsToRender.push(
                 <EffectContainer 
+                    key={tempCurrentEffects[i].value}
                     effectValue={tempCurrentEffects[i].value}
                     effectName={tempCurrentEffects[i].name} 
                     wetValue={0.2}
                     handleSliderChange={this.handleSliderChange}
+                    handleDeleteEffectClick={this.handleDeleteEffectClick}
                 />
             );
         }
