@@ -1022,7 +1022,8 @@ caption {
 
 .piano-roll-container{
   overflow-y: auto;
-  max-height: 300px;
+  /**max-height: 300px;**/
+  height: 40vh;
 }
 
 .piano-roll-button-unclicked{
@@ -1073,8 +1074,28 @@ caption {
 .multitrackContainer{
   border: 5px solid black;
   overflow-x: auto;
+  position: relative;
   /*display: flex;
   flex-direction: column;*/
+}
+/* the moving thing in the multitrack container */
+@keyframes playhead-move{
+  0%{
+    left: 200px;
+  }
+  100%{
+    left: 2000px;
+    transform: translateX(-100%);
+  }
+}
+
+.multitrack-playhead{
+  position:absolute;
+  border: solid 1px purple;
+  width: 2px;
+  height: 100%;
+  background-color: purple;
+  animation: playhead-move 10s linear infinite alternate;
 }
 
 .trackPatternContainer{
@@ -1138,11 +1159,28 @@ caption {
 .options-component{
   border: 1px solid rgb(170, 170, 170);
   padding: 1%;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 .dropdown:disabled{
   background-color:grey;
   color: grey;
+}
+
+/** container div for everything **/
+.main-components-container-div{
+  overflow: hidden
+}
+
+/** first **/
+.options-component-div{
+  float: left;
+}
+
+/** second **/
+.track-piano-component-div{
+  overflow:hidden;
 }
 
 /*

@@ -224,7 +224,7 @@ const PianoRollComponent = (props) =>{
             //currentSelectedInstrument={this.props.currentSelectedInstrument} 
         />
 
-        <Song isPlaying={isPlaying}>
+        <Song isPlaying={isPlaying} bpm={props.currentBPM}>
             <Track 
                 steps={steps} 
                 onStepPlay={(stepNotes, index)=>{
@@ -234,6 +234,15 @@ const PianoRollComponent = (props) =>{
             <Instrument 
                 type={props.currentSelectedInstrument}
                 oscillator={{type: props.currentSelectedOscillator}}
+                samples={{
+                    C3: '/Kick Basic.mp3',
+                    D3: '/Snare Basic.mp3',
+                    E3: '/Clap Basic.mp3',
+                    F3: '/Hat Basic.mp3',
+                }} 
+                onLoad={(buffers) => {
+                    // Runs when all samples are loaded
+                  }}
                 //type='polySynth'
             />
             </Track>

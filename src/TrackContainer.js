@@ -459,7 +459,16 @@ class TrackContainer extends Component{
                                     key={this.state.currentTrackIds[i]}
                                 >
                                     <Instrument 
-                                        type={foundObject.currentSelectedInstrument} 
+                                        type={foundObject.currentSelectedInstrument}
+                                        samples={{
+                                            C3: '/Kick Basic.mp3',
+                                            D3: '/Snare Basic.mp3',
+                                            E3: '/Clap Basic.mp3',
+                                            F3: '/Hat Basic.mp3',
+                                        }}
+                                        onLoad={(buffers) => {
+                                            // Runs when all samples are loaded
+                                          }} 
                                         envelope={{
                                             attack: foundObject.currentADSR[0],
                                             decay: foundObject.currentADSR[1],
@@ -491,7 +500,8 @@ class TrackContainer extends Component{
         return(
             
                 <div className='multitrackContainer'>
-                    <Song isPlaying={this.props.isSongPlaying}>
+                    <div style={this.props.isSongPlaying ? this.props.playheadCssProperties : this.props.playheadCssPropertiesInactive} ></div>
+                    <Song isPlaying={this.props.isSongPlaying} bpm={this.props.currentBPM}>
                         {tracksToRender}
                     </Song>
                     <button onClick={this.handleNewTrack}>New Track</button>
