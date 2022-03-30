@@ -391,7 +391,7 @@ class App extends React.Component {
             <Stack direction='row' sx={{mb: 1}} alignItems='center'>
                 <button onClick={this.handleAppLevelPlayButtonClick}>
                     <img 
-                        src={this.state.isPlaying ? "../stop.png" : "../play.png"} 
+                        src={this.state.isPlaying ? process.env.PUBLIC_URL + "/stop.png" : process.env.PUBLIC_URL + "/play.png"} 
                         className='play-stop-button'
                     />
                 </button>

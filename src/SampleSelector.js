@@ -19,10 +19,10 @@ class SampleSelector extends Component{
     }
 
     handleSamplePlay = (e) =>{
-        const kick = new Audio('/Kick Basic.wav')
-        const clap = new Audio('/Clap Basic.wav')
-        const hat = new Audio('/Hat Basic.wav')
-        const snare = new Audio('/Snare Basic.wav')
+        const kick = new Audio(process.env.PUBLIC_URL + '/Kick Basic.wav')
+        const clap = new Audio(process.env.PUBLIC_URL + '/Clap Basic.wav')
+        const hat = new Audio(process.env.PUBLIC_URL + '/Hat Basic.wav')
+        const snare = new Audio(process.env.PUBLIC_URL + '/Snare Basic.wav')
         let arr = [kick, clap, hat, snare];
         const selectedSample = e.target.value;
         // insert samples here and also send up and back down

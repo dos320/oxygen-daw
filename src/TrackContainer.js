@@ -460,10 +460,10 @@ class TrackContainer extends Component{
                                     <Instrument 
                                         type={foundObject.currentSelectedInstrument}
                                         samples={{
-                                            C3: '/Kick Basic.mp3',
-                                            D3: '/Snare Basic.mp3',
-                                            E3: '/Clap Basic.mp3',
-                                            F3: '/Hat Basic.mp3',
+                                            C3: process.env.PUBLIC_URL + '/Kick Basic.mp3',
+                                            D3: process.env.PUBLIC_URL + '/Snare Basic.mp3',
+                                            E3: process.env.PUBLIC_URL + '/Clap Basic.mp3',
+                                            F3: process.env.PUBLIC_URL + '/Hat Basic.mp3',
                                         }}
                                         onLoad={(buffers) => {
                                             // Runs when all samples are loaded
