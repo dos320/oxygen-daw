@@ -171,7 +171,6 @@ class TrackPatternContainer extends Component{
 
         return(
             <div className='trackPatternContainer'>
-                test
                 {patternsToRender}
             </div>
         );
