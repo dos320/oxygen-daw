@@ -3,9 +3,9 @@ A Digital Audio Workstation (DAW) built with React for COMP4905 Winter 2022
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Libraries Used:
-lodash
-Reactronica
-Material UI
+lodash \
+Reactronica \
+Material UI \
 
 ## Available Scripts
 
