@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/oxygen-daw/static/css/main.373b7f55.css",
+    "main.js": "/oxygen-daw/static/js/main.60146e6a.js",
+    "index.html": "/oxygen-daw/index.html",
+    "main.373b7f55.css.map": "/oxygen-daw/static/css/main.373b7f55.css.map",
+    "main.60146e6a.js.map": "/oxygen-daw/static/js/main.60146e6a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.373b7f55.css",
+    "static/js/main.60146e6a.js"
+  ]
+}
