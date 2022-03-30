@@ -2,7 +2,7 @@ import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
 import { render } from '@testing-library/react';
 import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
 import React, { Component, useState } from 'react';
-import {Song, Track, Instrument} from 'reactronica';
+import {Song, Track, Instrument, Effect} from 'reactronica';
 import { Filter } from 'tone';
 import TrackPattern from './TrackPattern';
 
@@ -171,7 +171,6 @@ class TrackPatternContainer extends Component{
 
         return(
             <div className='trackPatternContainer'>
-                test
                 {patternsToRender}
             </div>
         );
@@ -430,19 +429,54 @@ class TrackContainer extends Component{
     render(){
         var tracksToRender = [];
         
+        
+        // populate effectslist -- need to do this for each track
+        
+
         // renders depending on how many trackIDs there are. removing a track means removing a track id
         for(var i = 0; i<this.state.currentTrackIds.length; i++){
             //let currentTrackSteps = this.props.currentSteps.find(element =>{
                 //return element.trackID === 'track-' + i;
             //});
+            let effectsToRender = [];
+            let foundObject = this.props.trackOptions.find((element)=>{return element.trackID === this.state.currentTrackIds[i]})
+            //console.log(foundObject)
+            if(foundObject.currentEffects.length > 0){
+                for(let i = 0; i<foundObject.currentEffects.length; i++){
+                    effectsToRender.push(
+                        //<Effect type={this.props.currentEffects[i].value} wet={this.props.currentEffects[i].wet}/>
+                        <Effect type={foundObject.currentEffects[i].value} wet={foundObject.currentEffects[i].wet}/>
+                    );
+                }
+            }
+            console.log(foundObject.currentSelectedOscillator);
             tracksToRender.push(<Track
-                                    volume={-3}
-                                    pan={0}
+                                    volume={foundObject.volume} // -3 is default
+                                    pan={foundObject.pan}
                                     mute={this.findTrackMuteStatus(this.state.currentTrackIds[i]) ? true : false} // need to create new funciton for this
                                     steps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))} // need to fix this
                                     key={this.state.currentTrackIds[i]}
                                 >
-                                    <Instrument type='synth'></Instrument>
+                                    <Instrument 
+                                        type={foundObject.currentSelectedInstrument}
+                                        samples={{
+                                            C3: '/Kick Basic.mp3',
+                                            D3: '/Snare Basic.mp3',
+                                            E3: '/Clap Basic.mp3',
+                                            F3: '/Hat Basic.mp3',
+                                        }}
+                                        onLoad={(buffers) => {
+                                            // Runs when all samples are loaded
+                                          }} 
+                                        envelope={{
+                                            attack: foundObject.currentADSR[0],
+                                            decay: foundObject.currentADSR[1],
+                                            sustain: foundObject.currentADSR[2],
+                                            release: foundObject.currentADSR[3],
+                                        }}
+                                        polyphony={foundObject.currentPolyphony}
+                                        oscillator={foundObject.currentSelectedInstrument === 'membraneSynth' || foundObject.currentSelectedInstrument === 'monoSynth' || foundObject.currentSelectedInstrument === 'synth' ? {type: foundObject.currentSelectedOscillator} : null}
+                                    />
                                     <TrackView
                                         onClick={this.handleTrackClick}
                                         handlePatternClick={this.props.handlePatternClick}
@@ -458,13 +492,15 @@ class TrackContainer extends Component{
                                         handleMuted={this.handleMuted}
                                         handleSolo={this.handleSolo}
                                     />
+                                    {effectsToRender}
                                 </Track>
                                 )
         }   
         return(
             
                 <div className='multitrackContainer'>
-                    <Song isPlaying={this.props.isSongPlaying}>
+                    <div style={this.props.isSongPlaying ? this.props.playheadCssProperties : this.props.playheadCssPropertiesInactive} ></div>
+                    <Song isPlaying={this.props.isSongPlaying} bpm={this.props.currentBPM}>
                         {tracksToRender}
                     </Song>
                     <button onClick={this.handleNewTrack}>New Track</button>

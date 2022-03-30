@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
+import _ from 'lodash';
 import React, { Component, useState } from 'react';
 import {Song, Track, Instrument} from 'reactronica';
 
@@ -37,6 +38,35 @@ class PianoRoll extends Component{
             //steps: steps,
             steps: this.props.currentPianoRollSteps,
         };
+    }
+
+    componentDidUpdate(prevProps){
+        if(!_.isEqual(prevProps.currentPianoRollSteps, this.props.currentPianoRollSteps)){
+            let tempButtons = JSON.parse(JSON.stringify(defaultPianoButtons)); // deep copy
+            //console.log("tmp below this")
+            console.log(defaultPianoButtons);
+            for(let i = 0; i<this.props.currentPianoRollSteps.length; i++){
+                for(let j = 0; j<this.props.currentPianoRollSteps[i].length; j++){
+                    if(this.props.currentPianoRollSteps[i].length > 0){
+                        tempButtons[tempButtons.findIndex((button)=>{
+                            let split = button.name.split('-') // e.g., "pianobutton-C3-0"
+                            //console.log("split[1] === this.props.currentPianoRollSteps[i][j]: " + (split[1] === this.props.currentPianoRollSteps[i][j]))
+                            //console.log("split[2] === i: " + (split[2] === i))
+                            //console.log(split[2])
+                            //console.log(i)
+                            return split[1] === this.props.currentPianoRollSteps[i][j] && split[2] == i;
+                        })].isActive = true;
+                    } // all other entries are false by default
+                }
+            }
+            this.setState({
+                steps: this.props.currentPianoRollSteps,
+                pianoButtons: tempButtons,
+            });
+        }
+        
+        console.log(prevProps.currentPianoRollSteps);
+        console.log(this.props.currentPianoRollSteps)
     }
 
     changePianoButtonStyle = (e) =>{
@@ -178,7 +208,16 @@ class PianoRoll extends Component{
                 counter++;
             }
             let pianoKeyID = `pianokey-${noteNames[i]}`; // we use this later to determine colouring
-            rows.push(<tr key={i} id={rowID}><td><button id={pianoKeyID}>{noteNames[i]}</button></td>{cell}</tr>);
+            rows.push(
+            <tr key={i} id={rowID} style={{'fontSize': '0', 'width': '0.1%', 'whiteSpace':'nowrap'}}>
+                <td style={{'width': '0.1%', 'whiteSpace':'nowrap'}}>
+                    <button id={pianoKeyID} className={noteNames[i].includes('#') ? 'piano-roll-button-blackkey' : 'piano-roll-button-whitekey'}>
+                        {noteNames[i]}
+                    </button>
+                </td>
+                    {cell}
+            </tr>
+                    );
         }
         return(
             <div className="piano-roll-container">
@@ -221,16 +260,30 @@ const PianoRollComponent = (props) =>{
                 setSteps(steps);
                 props.updateCurrentPianoRollSteps(steps);
             }} // TODO: pass donw the setsteps function from parent, use with onclick!!!!
+            //currentSelectedInstrument={this.props.currentSelectedInstrument} 
         />
 
-        <Song isPlaying={isPlaying}>
+        <Song isPlaying={isPlaying} bpm={props.currentBPM}>
             <Track 
                 steps={steps} 
                 onStepPlay={(stepNotes, index)=>{
                     setCurrentStepIndex(index);
                 }}
             >
-            <Instrument type="polySynth" />
+            <Instrument 
+                type={props.currentSelectedInstrument}
+                oscillator={{type: props.currentSelectedOscillator}}
+                samples={{
+                    C3: '/Kick Basic.mp3',
+                    D3: '/Snare Basic.mp3',
+                    E3: '/Clap Basic.mp3',
+                    F3: '/Hat Basic.mp3',
+                }} 
+                onLoad={(buffers) => {
+                    // Runs when all samples are loaded
+                  }}
+                //type='polySynth'
+            />
             </Track>
         </Song>
         </>
