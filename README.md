@@ -5,7 +5,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Libraries Used:
 lodash \
 Reactronica \
-Material UI \
+Material UI
 
 ## Available Scripts
 
