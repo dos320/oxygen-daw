@@ -30,7 +30,7 @@ class TrackControl extends Component{ // note: generally, we should always use c
                 <button 
                 key='track-mute-button-1' 
                 id='track-mute-button-1' 
-                className={this.props.muteActive ? 'trackButton-active':'trackButton-inactive'} 
+                className={(this.props.muteActive || (this.props.currentSoloTrack !== this.props.trackID && this.props.currentSoloTrack !== '')) ? 'trackButton-active':'trackButton-inactive'} 
                 onClick={this.props.handleMuteButtonClick}>
                     Mute
                 </button>
@@ -199,13 +199,17 @@ class TrackView extends Component{
     handleMuteButtonClick = () =>{
         // notify parent that mute button is clicked
         // change style of clicked button (done, as the className is set to the appropriate class)
-        let muteActive = !this.state.muteActive;
+        
+        if(this.props.currentSoloTrack == ''){ // disables muting when solo is active 
+            let muteActive = !this.state.muteActive;
 
-        this.setState({muteActive}); // change style
-        //this.
+            this.setState({muteActive}); // change style
+            //this.
 
-        this.handleMute();
-        this.props.handleMuted(this.props.trackID); 
+            this.handleMute();
+            
+            this.props.handleMuted(this.props.trackID); 
+        }
     }
     
     handleSoloButtonClick = () =>{
@@ -221,7 +225,11 @@ class TrackView extends Component{
     handleMute = () =>{
         let isTrackMuted = false;
         if(this.state.muteActive) isTrackMuted = true;
-        if(this.props.currentSoloTrack != this.props.trackID) isTrackMuted =  true;
+        if(this.props.currentSoloTrack !== this.props.trackID){
+            isTrackMuted =  true;
+            console.log(this.props.currentSoloTrack);
+            console.log(this.props.trackID);
+        } 
 
         this.setState({isTrackMuted: isTrackMuted});
     }
@@ -275,6 +283,7 @@ class TrackView extends Component{
                 muteActive={this.state.muteActive}
                 soloActive={this.state.soloActive}
                 handleMuted={this.props.handleMuted}
+                isTrackMuted={this.state.isTrackMuted}
                 currentSoloTrack={this.props.currentSoloTrack}
                 trackID={this.props.trackID}
                 >
