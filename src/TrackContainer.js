@@ -454,17 +454,40 @@ class TrackContainer extends Component{
                 for(let i = 0; i<foundObject.currentEffects.length; i++){
                     effectsToRender.push(
                         //<Effect type={this.props.currentEffects[i].value} wet={this.props.currentEffects[i].wet}/>
-                        <Effect type={foundObject.currentEffects[i].value} wet={foundObject.currentEffects[i].wet}/>
+                        <Effect 
+                            key={foundObject.currentEffects[i].value}
+                            type={foundObject.currentEffects[i].value} 
+                            wet={foundObject.currentEffects[i].wet}
+                        />
                     );
                 }
             }
             console.log(foundObject.currentSelectedOscillator);
+            
+            /* prevents repeating after the notes of a track have finished, done with onStepPlay */
+            let foundTrackCurrentSteps = this.props.currentSteps.find((element)=>{
+                return element.trackID === this.state.currentTrackIds[i];
+            });
+            let combinedSteps = this.handleTrackStepsStepsGeneration(foundTrackCurrentSteps.trackSteps);
+            let tempMutedTracks = this.state.mutedTracks;
+            let foundIndex = tempMutedTracks.findIndex((element)=>{
+                return element.trackID === this.state.currentTrackIds[i];
+            });
             tracksToRender.push(<Track
                                     volume={foundObject.volume} // -3 is default
                                     pan={foundObject.pan}
                                     mute={this.findTrackMuteStatus(this.state.currentTrackIds[i]) ? true : false} // need to create new funciton for this
                                     steps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))} // need to fix this
                                     key={this.state.currentTrackIds[i]}
+                                    onStepPlay={(_, index)=>{
+                                        if(index > combinedSteps.length){
+                                            tempMutedTracks[foundIndex].muted = true;
+                                        }else if(tempMutedTracks[foundIndex].muted){
+                                            tempMutedTracks[foundIndex].muted = false;
+                                        }
+                                        // mute the track
+                                        // unmute after pausing/playing
+                                    }}
                                 >
                                     <Instrument 
                                         type={foundObject.currentSelectedInstrument}
@@ -509,7 +532,7 @@ class TrackContainer extends Component{
             
                 <div className='multitrackContainer'>
                     <div style={this.props.isSongPlaying ? this.props.playheadCssProperties : this.props.playheadCssPropertiesInactive} ></div>
-                    <Song isPlaying={this.props.isSongPlaying} bpm={this.props.currentBPM}>
+                    <Song isPlaying={this.props.isSongPlaying} bpm={this.props.currentBPM} volume={this.props.currentSongVolume}>
                         {tracksToRender}
                     </Song>
                     <button onClick={this.handleNewTrack}>New Track</button>

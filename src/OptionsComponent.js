@@ -5,7 +5,7 @@ import NumberSelector from './NumberSelector';
 import SampleSelector from './SampleSelector';
 import Slider from '@mui/material/Slider';
 import {Effect} from 'reactronica';
-import { TextField } from '@mui/material';
+import { TextField, Typography, Stack, Grid } from '@mui/material';
 
 // rendered by EffectsControls
 class EffectContainer extends Component{
@@ -159,21 +159,17 @@ class MainControls extends Component{
     constructor(props){
         super(props);
     }
-
+    foundIndex = this.props.trackOptions.findIndex((element)=>{
+        return element.trackID === this.props.currentSelectedTrackID;
+    });
     initialState = {
-        currentSelectedInstrument: this.props.trackOptions[this.props.trackOptions.findIndex((element)=>{
-            return element.trackID === this.props.currentSelectedTrackID;
-        })].currentSelectedInstrument,
-        currentSelectedOscillator: this.props.trackOptions[this.props.trackOptions.findIndex((element)=>{
-            return element.trackID === this.props.currentSelectedTrackID;
-        })].currentSelectedOscillator,
-        currentPolyphony: this.props.trackOptions[this.props.trackOptions.findIndex((element)=>{
-            return element.trackID === this.props.currentSelectedTrackID;
-        })].currentPolyphony,
+        currentSelectedInstrument: this.props.trackOptions[this.foundIndex].currentSelectedInstrument,
+        currentSelectedOscillator: this.props.trackOptions[this.foundIndex].currentSelectedOscillator,
+        currentPolyphony: this.props.trackOptions[this.foundIndex].currentPolyphony,
         //currentADSR: this.props.currentADSR,
-        currentADSR: this.props.trackOptions[this.props.trackOptions.findIndex((element)=>{
-            return element.trackID === this.props.currentSelectedTrackID;
-        })].currentADSR,
+        currentADSR: this.props.trackOptions[this.foundIndex].currentADSR,
+        currentVolume: this.props.trackOptions[this.foundIndex].volume,
+        currentPan: this.props.trackOptions[this.foundIndex].pan,
     }
     state = this.initialState;
     //handleInstrumentTypeOnChange = (event) =>{
@@ -212,14 +208,17 @@ class MainControls extends Component{
         tempADSR[foundIndex] = e.target.value;
 
         this.props.setCurrentADSR(tempADSR);
+        this.setState({currentADSR: tempADSR});
     }
 
     handleVolumeChange = (e) =>{
         this.props.setTrackVolume(e.target.value);
+        this.setState({currentVolume: e.target.value});
     }
 
     handlePanChange = (e) =>{
         this.props.setTrackPan(e.target.value);
+        this.setState({currentPan: e.target.value});
     }
 
     render(){
@@ -251,35 +250,60 @@ class MainControls extends Component{
                     setValue={this.props.setCurrentSelectedOscillator} 
                     value={this.props.trackOptions[foundIndex].currentSelectedOscillator} 
                     disabled={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? false : true}
-                    className={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? null: 'dropdown:disabled'}
+                    //className={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? null: 'dropdown:disabled'}
                 />
                 <NumberSelector label='Polyphony' setValue={this.props.setCurrentPolyphony} value={this.props.trackOptions[foundIndex].currentPolyphony}/> 
                 {this.props.trackOptions.find((element)=>{return element.trackID === this.props.currentSelectedTrackID}).currentSelectedInstrument === 'sampler' ? <SampleSelector /> : null}
-                <label>
-                    {'Volume'}
-                    <Slider name='volume-slider' defaultValue={-3} min={-10} max={10} step={0.01} onChange={this.handleVolumeChange}/>
-                </label>
-                <label>
-                    {'Pan'}
-                    <Slider name='pan-slider' defaultValue={0} min={-100} max={100} onChange={this.handlePanChange}/>
-                </label>
+                
+                <Grid container justifyContent='space-between'>
+                    <Typography align='left' sx={{fontWeight: 'bold'}}>
+                        {'Volume'}
+                    </Typography> 
+                    <Typography align='right'>{this.state.currentVolume + "dB"}</Typography>
+                </Grid>
+                <Slider name='volume-slider' defaultValue={-3} min={-10} max={10} step={0.01} onChange={this.handleVolumeChange} valueLabelDisplay='auto'/>
+                
+                <Grid container justifyContent='space-between'>
+                    <Typography align='left' sx={{fontWeight: 'bold'}}>
+                        {'Pan'}
+                    </Typography> 
+                    <Typography align='right'>{this.state.currentPan + "% " + (this.state.currentPan < 0 ? "L" : "R")}</Typography>
+                </Grid>
+                <Slider name='pan-slider' defaultValue={0} min={-100} max={100} onChange={this.handlePanChange} valueLabelDisplay='auto'/>
+
                 <div className={'adsr-div'}>
-                    <label key='attack-slider'>
-                        {'Attack'}
-                        <Slider name='attack-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[0]}/>
-                    </label>
-                    <label key='decay-slider'>
-                        {'Decay'}
-                        <Slider name='decay-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[1]}/>
-                    </label>
-                    <label key='sustain-slider'>
-                        {'Sustain'}
-                        <Slider name='sustain-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[2]}/>
-                    </label>
-                    <label key='release-slider'>
-                        {'Release'}
-                        <Slider name='release-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[3]}/>
-                    </label>
+                    <Grid container justifyContent='space-between'>
+                        <Typography key='attack-slider' align='left' sx={{fontWeight: 'bold'}}>
+                            {'Attack'}
+                        </Typography>
+                        <Typography align='right'>{this.state.currentADSR[0]}</Typography>
+                    </Grid>
+                    <Slider name='attack-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[0]} valueLabelDisplay='auto'/>
+                    
+                    <Grid container justifyContent='space-between'>
+                        <Typography key='decay-slider'align='left' sx={{fontWeight: 'bold'}}>
+                            {'Decay'}
+                        </Typography>
+                        <Typography align='right'>{this.state.currentADSR[1]}</Typography>
+                    </Grid> 
+                    <Slider name='decay-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[1]} valueLabelDisplay='auto'/>
+                    
+                    <Grid container justifyContent='space-between'>
+                        <Typography key='sustain-slider' align='left' sx={{fontWeight: 'bold'}}>
+                            {'Sustain'}
+                        </Typography>
+                        <Typography align='right'>{this.state.currentADSR[2]}</Typography>
+                    </Grid> 
+                    <Slider name='sustain-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[2]} valueLabelDisplay='auto'/>
+                    
+                    <Grid container justifyContent='space-between'>
+                        <Typography key='release-slider' align='left' sx={{fontWeight: 'bold'}}>
+                            {'Release'}
+                        </Typography>
+                        <Typography align='right'>{this.state.currentADSR[3]}</Typography>
+                    </Grid> 
+                    <Slider name='release-slider' defaultValue={0.2} max={1} step={0.01} onChange={this.handleSliderChange} value={this.props.trackOptions[foundIndex].currentADSR[3]} valueLabelDisplay='auto'/>
+
                 </div>
             </div>
         );

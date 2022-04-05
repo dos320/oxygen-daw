@@ -874,7 +874,7 @@ a.full-button {
   border-radius: 4px;
   padding: 0.75rem;
   outline: none;
-  background: transparent;
+  /*background: transparent;*/
   margin-bottom: 0.5rem;
   font-size: 1rem;
   width: 100%;
@@ -1209,8 +1209,13 @@ caption {
 }
 
 .dropdown:disabled{
-  background-color:grey;
-  color: grey;
+  background-color:red;
+  color: red;
+}
+
+.select:disabled{
+  background-color:red;
+  color: red;
 }
 
 /** container div for everything **/

@@ -35,12 +35,12 @@ class SampleSelector extends Component{
             <Stack>
                 <label>Sampler</label>
                 <Stack direction='row'>
-                    <button onClick={this.handleSamplePlay} value={0}>Kick</button>
-                    <button onClick={this.handleSamplePlay} value={1}>Clap</button>
+                    <button onClick={this.handleSamplePlay} value={0}>C3: Kick</button>
+                    <button onClick={this.handleSamplePlay} value={1}>D3: Clap</button>
                 </Stack>
                 <Stack direction='row'>
-                    <button onClick={this.handleSamplePlay} value={2}>Hat</button>
-                    <button onClick={this.handleSamplePlay} value={3}>Snare</button>
+                    <button onClick={this.handleSamplePlay} value={2}>E3: Hat</button>
+                    <button onClick={this.handleSamplePlay} value={3}>F3: Snare</button>
                 </Stack>
                 <label>Insert Sample</label>
                 <div>

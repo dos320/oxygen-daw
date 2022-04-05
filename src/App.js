@@ -7,7 +7,7 @@ import TrackContainer from './TrackContainer';
 import {Song, Track, Instrument, Effect} from 'reactronica';
 import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
 import OptionsComponent from './OptionsComponent';
-import { Slider, Stack, TextField } from '@mui/material';
+import { Slider, Stack, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 
@@ -404,6 +404,7 @@ class App extends React.Component {
                 />
                 <label>Song Vol</label>
                 <Box sx={{width: '300px'}}>
+                    <Typography>{this.state.currentSongVolume + "dB"}</Typography>
                     <Slider 
                         id='song-volume-slider'
                         value={this.state.currentSongVolume}
@@ -412,6 +413,7 @@ class App extends React.Component {
                         max={10}
                         step={0.1}
                         aria-label="Volume"
+                        valueLabelDisplay='auto'
                     />
                 </Box>
                 
@@ -454,6 +456,7 @@ class App extends React.Component {
                     currentBPM={this.state.currentBPM}
                     playheadCssProperties={this.state.playheadCssProperties}
                     playheadCssPropertiesInactive={this.state.playheadCssPropertiesInactive}
+                    currentSongVolume={this.state.currentSongVolume}
                 >
                 </TrackContainer>
                 
