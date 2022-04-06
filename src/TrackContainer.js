@@ -6,6 +6,7 @@ import {Song, Track, Instrument, Effect} from 'reactronica';
 import { Filter } from 'tone';
 import TrackPattern from './TrackPattern';
 
+var _ = require('lodash');
 var noteNames =     ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
                             'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4']
 
@@ -416,6 +417,19 @@ class TrackContainer extends Component{
         return this.state.mutedTracks[foundIndex].muted;
     }
 
+    componentDidUpdate(prevProps){
+        //console.log(prevProps.trackOptions);
+        //console.log(this.props.trackOptions);
+        //if(this.props.prevTrackOptions !== []){
+            //console.log(prevProps.trackOptions)
+            //console.log(this.props.trackOptions)
+            if(!_.isEqual(prevProps.trackOptions, this.props.trackOptions)){ // BUGGED - ENVELOPE DOES NOT UPDATE UNTIL INSTURMENT IS SWITCHED
+                console.log("force update");
+                this.forceUpdate(); 
+            }
+        //} 
+    }
+
     //getTrackID = (trackID) =>{
     //    this.setState({currentSelectedTrackID: trackID});
     //}
@@ -506,7 +520,7 @@ class TrackContainer extends Component{
                                             sustain: foundObject.currentADSR[2],
                                             release: foundObject.currentADSR[3],
                                         }}
-                                        polyphony={foundObject.currentPolyphony}
+                                        polyphony={Number(foundObject.currentPolyphony)}
                                         oscillator={foundObject.currentSelectedInstrument === 'membraneSynth' || foundObject.currentSelectedInstrument === 'monoSynth' || foundObject.currentSelectedInstrument === 'synth' ? {type: foundObject.currentSelectedOscillator} : null}
                                     />
                                     <TrackView

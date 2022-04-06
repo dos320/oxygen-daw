@@ -205,13 +205,28 @@ class App extends React.Component {
         this.setState({trackOptions: tempTrackOptions});
     };
     setCurrentADSR = (arr) =>{
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
+        //let prevTrackOptions = [].concat(this.state.trackOptions);
+        console.log(arr)
+        console.log(tempTrackOptions)
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
         tempTrackOptions[foundIndex].currentADSR = arr;
+        console.log(tempTrackOptions);
         this.setState({trackOptions: tempTrackOptions});
     };
+    setPrevADSR = (arr) =>{
+        
+        let prevTrackOptions = [].concat(this.state.trackOptions);
+        let foundIndex = this.state.trackOptions.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+        prevTrackOptions[foundIndex].currentADSR = arr;
+        console.log(arr)
+        console.log(prevTrackOptions);
+        this.setState({prevTrackOptions: prevTrackOptions});
+    }
     setCurrentEffects = (arr) =>{
         // find currentSelectedTrack and set its currentEFfects to arr
         let tempTrackOptions = this.state.trackOptions;
@@ -364,6 +379,7 @@ class App extends React.Component {
                 pan: 0,
             },
         ],
+        prevTrackOptions: [],
         playheadCssProperties:{
             'position': 'absolute',
             'border': 'solid 1px purple',
@@ -427,6 +443,7 @@ class App extends React.Component {
                     setCurrentPolyphony={this.setCurrentPolyphony}
                     currentSelectedInstrument={this.state.currentSelectedInstrument}
                     setCurrentADSR={this.setCurrentADSR}
+                    setPrevADSR={this.setPrevADSR}
                     currentADSR={this.state.currentADSR}
                     setCurrentEffects={this.setCurrentEffects}
                     currentSelectedTrackID={this.state.currentSelectedTrackID}
@@ -457,6 +474,7 @@ class App extends React.Component {
                     playheadCssProperties={this.state.playheadCssProperties}
                     playheadCssPropertiesInactive={this.state.playheadCssPropertiesInactive}
                     currentSongVolume={this.state.currentSongVolume}
+                    prevTrackOptions={this.state.prevTrackOptions}
                 >
                 </TrackContainer>
                 

@@ -195,10 +195,11 @@ class MainControls extends Component{
 
     // untested... please test
     handleSliderChange = (e) =>{
-        let tempADSR = this.state.currentADSR; // might need to change this according to the currently selected track
+        let tempADSR = [].concat(this.state.currentADSR); // might need to change this according to the currently selected track
         const ADSRIDarray = ['attack-slider', 'decay-slider', 'sustain-slider', 'release-slider'];
         let foundIndex = 0;
-        
+        //console.log(tempADSR); 
+        //this.props.setCurrentADSR(tempADSR); this doesnt work; somehow magically updates adsr array before i can get to it idek  
         for(let i = 0; i<ADSRIDarray.length; i++){
             if(ADSRIDarray[i] === e.target.name){
                 foundIndex = i;
@@ -206,7 +207,7 @@ class MainControls extends Component{
             } 
         }
         tempADSR[foundIndex] = e.target.value;
-
+        
         this.props.setCurrentADSR(tempADSR);
         this.setState({currentADSR: tempADSR});
     }
@@ -244,6 +245,7 @@ class MainControls extends Component{
         return(
             <div>
                 <DropdownList label='Instrument' items={instrumentList} setValue={this.props.setCurrentSelectedInstrument} value={this.props.trackOptions[foundIndex].currentSelectedInstrument}/>
+                {this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? 
                 <DropdownList 
                     label='Oscillator Type' 
                     items={oscillatorList} 
@@ -251,7 +253,8 @@ class MainControls extends Component{
                     value={this.props.trackOptions[foundIndex].currentSelectedOscillator} 
                     disabled={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? false : true}
                     //className={this.props.trackOptions[foundIndex].currentSelectedInstrument === 'membraneSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'monoSynth' || this.props.trackOptions[foundIndex].currentSelectedInstrument === 'synth' ? null: 'dropdown:disabled'}
-                />
+                /> : null}
+                
                 <NumberSelector label='Polyphony' setValue={this.props.setCurrentPolyphony} value={this.props.trackOptions[foundIndex].currentPolyphony}/> 
                 {this.props.trackOptions.find((element)=>{return element.trackID === this.props.currentSelectedTrackID}).currentSelectedInstrument === 'sampler' ? <SampleSelector /> : null}
                 
@@ -338,6 +341,7 @@ class OptionsComponent extends Component{
                         currentSelectedInstrument={this.props.currentSelectedInstrument}
                         setCurrentADSR={this.props.setCurrentADSR}
                         currentADSR={this.props.currentADSR}
+                        setPrevADSR={this.props.setPrevADSR}
                         currentSelectedTrackID={this.props.currentSelectedTrackID}
                         trackOptions={this.props.trackOptions}
                         setTrackVolume={this.props.setTrackVolume}
