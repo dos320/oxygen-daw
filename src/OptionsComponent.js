@@ -188,17 +188,21 @@ class MainControls extends Component{
                 currentSelectedOscillator: this.props.trackOptions[foundIndex].currentSelectedOscillator,
                 currentPolyphony: this.props.trackOptions[foundIndex].currentPolyphony,
                 //currentADSR: this.props.currentADSR,
-                currentADSR: this.props.trackOptions[foundIndex].currentADSR,
+                currentADSR: [].concat(this.props.trackOptions[foundIndex].currentADSR),
             })
         }
     }
 
     // untested... please test
     handleSliderChange = (e) =>{
-        let tempADSR = [].concat(this.state.currentADSR); // might need to change this according to the currently selected track
+        let foundIndex1 = this.props.trackOptions.findIndex((element)=>{
+            return element.trackID === this.props.currentSelectedTrackID;
+        });
+        console.log(this.props.trackOptions); // changes before
+        let tempADSR = [].concat(this.props.trackOptions[foundIndex1].currentADSR); // might need to change this according to the currently selected track
         const ADSRIDarray = ['attack-slider', 'decay-slider', 'sustain-slider', 'release-slider'];
         let foundIndex = 0;
-        //console.log(tempADSR); 
+        console.log(tempADSR[0]); 
         //this.props.setCurrentADSR(tempADSR); this doesnt work; somehow magically updates adsr array before i can get to it idek  
         for(let i = 0; i<ADSRIDarray.length; i++){
             if(ADSRIDarray[i] === e.target.name){
@@ -208,8 +212,11 @@ class MainControls extends Component{
         }
         tempADSR[foundIndex] = e.target.value;
         
-        this.props.setCurrentADSR(tempADSR);
-        this.setState({currentADSR: tempADSR});
+        this.setState({currentADSR: tempADSR}, ()=>{
+            console.log(this.props.trackOptions[foundIndex1].currentADSR);
+            console.log(tempADSR[0]); 
+            this.props.setCurrentADSR(tempADSR);
+        });
     }
 
     handleVolumeChange = (e) =>{
@@ -343,7 +350,7 @@ class OptionsComponent extends Component{
                         currentADSR={this.props.currentADSR}
                         setPrevADSR={this.props.setPrevADSR}
                         currentSelectedTrackID={this.props.currentSelectedTrackID}
-                        trackOptions={this.props.trackOptions}
+                        trackOptions={JSON.parse(JSON.stringify(this.props.trackOptions))}
                         setTrackVolume={this.props.setTrackVolume}
                         setTrackPan={this.props.setTrackPan}
                     />

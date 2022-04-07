@@ -421,8 +421,8 @@ class TrackContainer extends Component{
         //console.log(prevProps.trackOptions);
         //console.log(this.props.trackOptions);
         //if(this.props.prevTrackOptions !== []){
-            //console.log(prevProps.trackOptions)
-            //console.log(this.props.trackOptions)
+            console.log(prevProps.trackOptions)
+            console.log(this.props.trackOptions)
             if(!_.isEqual(prevProps.trackOptions, this.props.trackOptions)){ // BUGGED - ENVELOPE DOES NOT UPDATE UNTIL INSTURMENT IS SWITCHED
                 console.log("force update");
                 this.forceUpdate(); 
@@ -514,7 +514,7 @@ class TrackContainer extends Component{
                                         onLoad={(buffers) => {
                                             // Runs when all samples are loaded
                                           }} 
-                                        envelope={{
+                                        envelope={{ // attempted to fix; need to wait for library update
                                             attack: foundObject.currentADSR[0],
                                             decay: foundObject.currentADSR[1],
                                             sustain: foundObject.currentADSR[2],

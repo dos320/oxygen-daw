@@ -181,7 +181,7 @@ class App extends React.Component {
 
     /* optioncomponent stuff */
     setCurrentSelectedInstrument = (instrument) =>{
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
@@ -189,7 +189,7 @@ class App extends React.Component {
         this.setState({trackOptions: tempTrackOptions})
     }
     setCurrentSelectedOscillator = (oscillator) =>{
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
@@ -197,7 +197,7 @@ class App extends React.Component {
         this.setState({trackOptions: tempTrackOptions})
     };
     setCurrentPolyphony = (num) =>{
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
@@ -205,7 +205,8 @@ class App extends React.Component {
         this.setState({trackOptions: tempTrackOptions});
     };
     setCurrentADSR = (arr) =>{
-        let tempTrackOptions = [].concat(this.state.trackOptions);
+        console.log(this.state.trackOptions);
+        let tempTrackOptions = JSON.parse(JSON.stringify(this.state.trackOptions)); // why is this already updated??? am i updating it before somewhere..
         //let prevTrackOptions = [].concat(this.state.trackOptions);
         console.log(arr)
         console.log(tempTrackOptions)
@@ -214,7 +215,7 @@ class App extends React.Component {
         });
         tempTrackOptions[foundIndex].currentADSR = arr;
         console.log(tempTrackOptions);
-        this.setState({trackOptions: tempTrackOptions});
+        this.setState({trackOptions: JSON.parse(JSON.stringify(tempTrackOptions))});
     };
     setPrevADSR = (arr) =>{
         
@@ -229,7 +230,7 @@ class App extends React.Component {
     }
     setCurrentEffects = (arr) =>{
         // find currentSelectedTrack and set its currentEFfects to arr
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
@@ -246,7 +247,7 @@ class App extends React.Component {
         this.setState({trackNames: tempTrackNames});
     }
     setTrackVolume = (val) =>{
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
@@ -254,7 +255,7 @@ class App extends React.Component {
         this.setState({trackOptions: tempTrackOptions});
     }
     setTrackPan = (val) =>{
-        let tempTrackOptions = this.state.trackOptions;
+        let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
@@ -447,7 +448,7 @@ class App extends React.Component {
                     currentADSR={this.state.currentADSR}
                     setCurrentEffects={this.setCurrentEffects}
                     currentSelectedTrackID={this.state.currentSelectedTrackID}
-                    trackOptions={this.state.trackOptions}
+                    trackOptions={JSON.parse(JSON.stringify(this.state.trackOptions))}
                     trackNames={this.state.trackNames}
                     setTrackName={this.setTrackName}
                     setTrackVolume={this.setTrackVolume}
@@ -469,7 +470,7 @@ class App extends React.Component {
                     currentPianoSteps={this.state.currentPianoRollSteps}
                     isSongPlaying={this.state.isPlaying}
                     currentEffects={this.state.currentEffects}
-                    trackOptions={this.state.trackOptions}
+                    trackOptions={JSON.parse(JSON.stringify(this.state.trackOptions))}
                     currentBPM={this.state.currentBPM}
                     playheadCssProperties={this.state.playheadCssProperties}
                     playheadCssPropertiesInactive={this.state.playheadCssPropertiesInactive}
