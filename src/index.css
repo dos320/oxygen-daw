@@ -1170,16 +1170,20 @@ caption {
 }
 
 .pattern-td{
-  
+  pointer-events: none;
 }
 
 /* use this for cells that are to be filled */
 .pattern-td-filled{
   background-color: #0366ee;
+  pointer-events: none;
 }
 
 .pattern-tr{
 
+}
+.table-no-clickthrough{
+  pointer-events: none;
 }
 
 .play-stop-button{

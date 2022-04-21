@@ -10,7 +10,7 @@ import OptionsComponent from './OptionsComponent';
 import { Slider, Stack, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
-
+var _ = require('lodash');
 
 class App extends React.Component {
     removeCharacter = (index) =>{
@@ -176,7 +176,37 @@ class App extends React.Component {
     }
 
     handleAppLevelPlayButtonClick = () =>{
-        this.setState({isPlaying: !this.state.isPlaying});
+        this.setState({
+            isPlaying: !this.state.isPlaying
+        }, ()=>{
+            if(this.state.isPlaying){
+                let tempIntervals = [];
+                let maxNumPatterns = _.maxBy(this.state.numPatterns, (element)=>{
+                    return element.num;
+                })
+                console.log("maxnumpatterns: " + maxNumPatterns)
+                let animTime = 1800 / (18.75 * this.state.currentBPM / 60);
+                let intervalTime = ((300 * maxNumPatterns.num / 1800) * animTime) *1000;
+                console.log("interval time: " + intervalTime);
+                tempIntervals.push(setInterval(()=>{
+                    console.log("timeout");
+                    this.setState({restartAnimation: true}, ()=>{
+                        requestAnimationFrame(()=>{
+                            console.log(this.state.restartAnimation)
+                            this.setState({restartAnimation:false});
+                        })
+                    })
+                }, intervalTime)) // set this time: 300*max_num_patterns / 1800 * animTime
+                this.setState({intervals: tempIntervals});
+            }else{
+                let tempIntervals = this.state.intervals;
+                for(let i = 0; i<tempIntervals.length; i++){
+                    clearInterval(tempIntervals[i]);
+                }
+                this.setState({intervals: []});
+            }
+            
+        });
     }
 
     /* optioncomponent stuff */
@@ -272,7 +302,10 @@ class App extends React.Component {
         console.log(e.target.value)
         if(re.test(e.target.value)){
             this.setState({currentBPM: Number(e.target.value)}, ()=>{
-                let animTime = 2000 / (18.75 * this.state.currentBPM / 60);
+                //let playheadResetPoint = _.maxBy(this.state.numPatterns, (element)=>{
+                    //return element.num;
+                //})*300; 
+                let animTime = 1800 / (18.75 * this.state.currentBPM / 60);
                 console.log(animTime);
                 const tempCssProperties = {
                     'position': 'absolute',
@@ -286,13 +319,16 @@ class App extends React.Component {
             });
         }else{
             this.setState({currentBPM: 120}, ()=>{
+                //let playheadResetPoint = _.maxBy(this.state.numPatterns, (element)=>{
+                    //return element.num;
+                //})*300;
                 const tempCssProperties = {
                     'position': 'absolute',
                     'border': 'solid 1px purple',
                     'width': '2px',
                     'height': '100%',
                     //'background-color': 'purple',
-                    'animation': 'playhead-move 53.33s linear infinite alternate',
+                    'animation': 'playhead-move 48s linear infinite alternate',
                 }
                 this.setState({playheadCssProperties: tempCssProperties});
             });
@@ -301,6 +337,18 @@ class App extends React.Component {
     setCurrentSongVolume = (e) =>{
         this.setState({currentSongVolume: Number(e.target.value)})
     }
+
+    /*componentDidMount(){
+        setTimeout(()=>{
+            console.log("timeout");
+            this.setState({restartAnimation: true}, ()=>{
+                requestAnimationFrame(()=>{
+                    this.setState({restartAnimation:false});
+                })
+            })
+        }, 3000)
+    }*/
+
     state = {
         characters: [
             /*{
@@ -387,7 +435,7 @@ class App extends React.Component {
             'width': '2px',
             'height': '100%',
             //'background-color': 'purple',
-            'animation': 'playhead-move 53.33s linear infinite alternate',
+            'animation': 'playhead-move 48s linear infinite alternate',
         },
         playheadCssPropertiesInactive:{
             'position': 'absolute',
@@ -396,7 +444,9 @@ class App extends React.Component {
             'height': '100%',
             //'background-color': 'purple',
             'left': '200px',
-        }
+        },
+        restartAnimation: false,
+        intervals:[],
     }
     render() {
         const {characters} = this.state; // why does this break without braces???
@@ -476,6 +526,7 @@ class App extends React.Component {
                     playheadCssPropertiesInactive={this.state.playheadCssPropertiesInactive}
                     currentSongVolume={this.state.currentSongVolume}
                     prevTrackOptions={this.state.prevTrackOptions}
+                    restartAnimation={this.state.restartAnimation}
                 >
                 </TrackContainer>
                 

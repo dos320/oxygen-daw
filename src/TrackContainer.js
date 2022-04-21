@@ -104,7 +104,7 @@ class TrackPatternContainer extends Component{
         let activeSteps = [];
         // serves to populate activeSteps 
         for(let i = 0; i<this.props.currentTrackSteps.trackSteps.length; i++){
-            activeSteps.push([...Array(noteNames.length)].map(e => Array(16).fill(false))); // push empty 16x24 array for each new pattern
+            activeSteps.push([...Array(noteNames.length)].map(e => Array(16).fill(false))); // push empty 16x #notes array for each new pattern
             console.log(this.props.currentTrackSteps.trackSteps[i].pattern)
             for(let j = 0; j<this.props.currentTrackSteps.trackSteps[i].pattern.length; j++){
                 if(this.props.currentTrackSteps.trackSteps[i].pattern[j].length > 0 && this.props.currentTrackSteps.trackSteps[i].pattern[j].length !== null){
@@ -162,7 +162,7 @@ class TrackPatternContainer extends Component{
                     key={this.props.trackID + '-pattern-' + i}
                     onClick={this.handlePatternClickHelper}
                 >
-                    <table id={'pattern' + i + '-table'}>
+                    <table id={'pattern' + i + '-table'} className={'table-no-clickthrough'}>
                         <tbody>
                             {rows}
                         </tbody>
@@ -551,7 +551,7 @@ class TrackContainer extends Component{
         return(
             
                 <div className='multitrackContainer'>
-                    <div style={this.props.isSongPlaying ? this.props.playheadCssProperties : this.props.playheadCssPropertiesInactive} ></div>
+                    {this.props.restartAnimation ? <></> : <div style={this.props.isSongPlaying ? this.props.playheadCssProperties : this.props.playheadCssPropertiesInactive}></div>}
                     <Song isPlaying={this.props.isSongPlaying} bpm={this.props.currentBPM} volume={this.props.currentSongVolume}>
                         {tracksToRender}
                     </Song>
