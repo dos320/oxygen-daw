@@ -4,8 +4,17 @@ import _ from 'lodash';
 import React, { Component, useState } from 'react';
 import {Song, Track, Instrument} from 'reactronica';
 
-var noteNames =     ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
-                            'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4']
+//var noteNames =     ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+                            //'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4']
+var noteNames =     [   
+                        'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2',
+                        'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+                        'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4',
+                        'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5',
+                        'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6'
+                    ]
+
+
 var defaultPianoButtons = [];
 
 class PianoRoll extends Component{
@@ -13,7 +22,7 @@ class PianoRoll extends Component{
         super(props);
         let tmp = [];
         let steps = [];
-        for(var i = 0; i<24; i++){ // we hardcode the totalsteps here lol, fix later
+        for(var i = 0; i<noteNames.length; i++){ // we hardcode the totalsteps here lol, fix later
             for(var index = 0; index<16; index++){
                 let buttonID = `pianobutton-${noteNames[i]}-${index}`;
                 tmp.push(
@@ -32,7 +41,7 @@ class PianoRoll extends Component{
 
         this.state = {
             totalSteps: 16,
-            totalKeys: 24,
+            totalKeys: noteNames.length,//24,
             pianoButtonStyle: "piano-roll-button-unclicked",
             pianoButtons: tmp, // todo: change this into a 1d array -- done?
             //steps: steps,
