@@ -1224,7 +1224,9 @@ caption {
 
 /** container div for everything **/
 .main-components-container-div{
-  overflow: hidden
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 
 /** first **/
@@ -1235,6 +1237,11 @@ caption {
 /** second **/
 .track-piano-component-div{
   overflow:hidden;
+}
+
+.app-level-buttons-div{
+  width:50%;
+  margin: 0 auto;
 }
 
 /*

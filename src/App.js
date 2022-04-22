@@ -186,7 +186,7 @@ class App extends React.Component {
                 })
                 console.log("maxnumpatterns: " + maxNumPatterns)
                 let animTime = 1800 / (18.75 * this.state.currentBPM / 60);
-                let intervalTime = ((300 * maxNumPatterns.num / 1800) * animTime) *1000;
+                let intervalTime = ((300 * maxNumPatterns.num / 1800) * animTime) * 1000;
                 console.log("interval time: " + intervalTime);
                 tempIntervals.push(setInterval(()=>{
                     console.log("timeout");
@@ -452,10 +452,10 @@ class App extends React.Component {
         const {characters} = this.state; // why does this break without braces???
         let foundObject = this.state.trackOptions.find((element)=>{return element.trackID === this.state.currentSelectedTrackID});
       return(
-        <div className="container">
+        <div className="full-container">
           <h1>Oxygen</h1>
-          <div id='app-level-buttons'>
-            <Stack direction='row' sx={{mb: 1}} alignItems='center'>
+          <div id='app-level-buttons' className='app-level-buttons-div'>
+            <Stack direction='row' sx={{mb: 1}} alignItems='center' spacing={2} className='app-level-buttons-div'>
                 <button onClick={this.handleAppLevelPlayButtonClick}>
                     <img 
                         src={this.state.isPlaying ? process.env.PUBLIC_URL + "/stop.png" : process.env.PUBLIC_URL + "/play.png"} 
