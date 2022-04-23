@@ -1120,6 +1120,7 @@ caption {
   border: 5px solid black;
   overflow-x: auto;
   position: relative;
+  height: 50vh;
   /*display: flex;
   flex-direction: column;*/
 }
@@ -1227,6 +1228,7 @@ caption {
   overflow: hidden;
   padding: 0;
   margin: 0;
+  height: 100vh;
 }
 
 /** first **/
@@ -1242,6 +1244,15 @@ caption {
 .app-level-buttons-div{
   width:50%;
   margin: 0 auto;
+  padding-top: 12px;
+}
+
+.logo{
+  display: inline-block;
+}
+
+.top-row{
+  display: flex;
 }
 
 /*

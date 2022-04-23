@@ -453,39 +453,44 @@ class App extends React.Component {
         let foundObject = this.state.trackOptions.find((element)=>{return element.trackID === this.state.currentSelectedTrackID});
       return(
         <div className="full-container">
-          <h1>Oxygen</h1>
-          <div id='app-level-buttons' className='app-level-buttons-div'>
-            <Stack direction='row' sx={{mb: 1}} alignItems='center' spacing={2} className='app-level-buttons-div'>
-                <button onClick={this.handleAppLevelPlayButtonClick}>
-                    <img 
-                        src={this.state.isPlaying ? process.env.PUBLIC_URL + "/stop.png" : process.env.PUBLIC_URL + "/play.png"} 
-                        className='play-stop-button'
+          <div className={'top-row'}>
+            <div className={'logo'}>
+                <h1>Oxygen</h1>
+            </div>
+            <div id='app-level-buttons' className='app-level-buttons-div'>
+                <Stack direction='row' sx={{mb: 1}} alignItems='center' spacing={2} className='app-level-buttons-div'>
+                    <button onClick={this.handleAppLevelPlayButtonClick}>
+                        <img 
+                            src={this.state.isPlaying ? process.env.PUBLIC_URL + "/stop.png" : process.env.PUBLIC_URL + "/play.png"} 
+                            className='play-stop-button'
+                        />
+                    </button>
+                    <TextField 
+                        id='bpm-input' 
+                        label='BPM' 
+                        type='number' 
+                        value={this.state.currentBPM}
+                        onChange={this.setCurrentBPM} 
                     />
-                </button>
-                <TextField 
-                    id='bpm-input' 
-                    label='BPM' 
-                    type='number' 
-                    value={this.state.currentBPM}
-                    onChange={this.setCurrentBPM} 
-                />
-                <label>Song Vol</label>
-                <Box sx={{width: '300px'}}>
-                    <Typography>{this.state.currentSongVolume + "dB"}</Typography>
-                    <Slider 
-                        id='song-volume-slider'
-                        value={this.state.currentSongVolume}
-                        onChange={this.setCurrentSongVolume}
-                        min={0}
-                        max={10}
-                        step={0.1}
-                        aria-label="Volume"
-                        valueLabelDisplay='auto'
-                    />
-                </Box>
-                
-            </Stack>
+                    <label>Song Vol</label>
+                    <Box sx={{width: '300px'}}>
+                        <Typography>{this.state.currentSongVolume + "dB"}</Typography>
+                        <Slider 
+                            id='song-volume-slider'
+                            value={this.state.currentSongVolume}
+                            onChange={this.setCurrentSongVolume}
+                            min={0}
+                            max={10}
+                            step={0.1}
+                            aria-label="Volume"
+                            valueLabelDisplay='auto'
+                        />
+                    </Box>
+                    
+                </Stack>
+            </div>
           </div>
+          
           <div className='main-components-container-div'>
             <div className='options-component-div'>
                 <OptionsComponent 
