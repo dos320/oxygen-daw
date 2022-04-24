@@ -9,10 +9,11 @@ Material UI
 
 ## Steps to get started
 If downloading from Github:
-1. clone and/or extract into desired directory
-2. run `npm install`
-3. run `npm start`
-4. navigate to [http://localhost:3000](http://localhost:3000)
+1. ensure you have the latest stable version of [Node.js](https://nodejs.org/en/) installed
+2. clone and/or extract into desired directory
+3. run `npm install`
+4. run `npm start`
+5. navigate to [http://localhost:3000](http://localhost:3000)
 
 Otherwise, you can simply access the remotely hosted web app at [dos320.github.io/oxygen-daw/](http://dos320.github.io/oxygen-daw/)
 
