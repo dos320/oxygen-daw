@@ -14,7 +14,7 @@ If downloading from Github:
 3. run `npm start`
 4. navigate to [http://localhost:3000](http://localhost:3000)
 
-Otherwise, you can simply access the remotely hosted web app at [dos320.github.io/oxygen-daw/]
+Otherwise, you can simply access the remotely hosted web app at [dos320.github.io/oxygen-daw/](dos320.github.io/oxygen-daw/)
 
 ## Available Scripts
 
