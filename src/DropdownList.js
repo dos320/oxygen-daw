@@ -1,3 +1,10 @@
+/*
+    DropdownList.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    Modified HTML select that uses prop and state
+*/
+
 import React, { Component, useState } from 'react';
 
 // props: label, list of items, onChange

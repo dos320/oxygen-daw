@@ -1,3 +1,11 @@
+/*
+    NumberSelector.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    Textbox with up and down arrows on the right hand side, used for both manually entering numeric data
+    or incrementing/decrementing the current number
+*/
+
 import React, { Component, useState } from 'react';
 import TextField from '@mui/material/TextField'
 

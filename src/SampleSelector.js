@@ -1,3 +1,11 @@
+/*
+    SampleSelector.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    Logic and rendering for the "Sampler" instrument option
+    Component for use with Oxygen
+*/
+
 import React, { Component, useState } from 'react';
 import { Stack, Grid } from '@mui/material';
 // only appear if the sample option is selected

@@ -1,3 +1,12 @@
+/*
+    PianoRollComponent.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    A Piano Roll - contains buttons corresponding to a particular note on a piano, 
+    with multiple columns representing each step in a song.
+    Component for use with Oxygen
+*/
+
 import { render } from '@testing-library/react';
 import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
 import _ from 'lodash';

@@ -1,3 +1,11 @@
+/*
+    OptionsComponent.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    Contains the components that are reponsible for displaying the track-wise specific data, and 
+    components that can be used to customize said data
+    Components for use with Oxygen
+*/
 import React, { Component, useState } from 'react';
 import { Sampler } from 'tone';
 import DropdownList from './DropdownList';
@@ -7,7 +15,10 @@ import Slider from '@mui/material/Slider';
 import {Effect} from 'reactronica';
 import { TextField, Typography, Stack, Grid } from '@mui/material';
 
-// rendered by EffectsControls
+// EffectContainer
+// handles/generates the container for each Effect
+
+// filled by EffectsControls
 class EffectContainer extends Component{
     constructor(props){
         super(props);
@@ -48,6 +59,8 @@ class EffectContainer extends Component{
     }
 }
 
+// EffectsControls
+// handles generation, logic and displaying of all Effect components
 class EffectsControls extends Component{
     constructor(props){
         super(props);
@@ -155,6 +168,8 @@ class EffectsControls extends Component{
     }
 }
 
+// MainControls
+// renders all elements inside the OptionsComponent except for the effects, sends data back to App
 class MainControls extends Component{
     constructor(props){
         super(props);
@@ -320,6 +335,8 @@ class MainControls extends Component{
     }
 }
 
+// OptionsComponent
+// container for everything options related
 class OptionsComponent extends Component{
     constructor(props){
         super(props);

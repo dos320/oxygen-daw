@@ -1,3 +1,12 @@
+/*
+    TrackContainer.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    Contains the necessary components for wrapping Reactronica components,
+    and displaying track-related elements within Oxygen
+    Components for use with Oxygen
+*/
+
 import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
 import { render } from '@testing-library/react';
 import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
@@ -15,15 +24,13 @@ var noteNames =     [
     'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6'
 ];
 
-
-// control bar on the left hand side of the track
+// TrackControl
+// generates the control bar on the left hand side of each track
 class TrackControl extends Component{ // note: generally, we should always use class components when dealing with state
     constructor(props){
         super(props);
     }
 
-
-    
     render(){ // style={}
         return(
             <>
@@ -62,12 +69,11 @@ class TrackControl extends Component{ // note: generally, we should always use c
     }
 }
 
-// the space inside the track that contains the patterns (separate file)
+// TrackPatternContainer
+// generates the space inside the track that contains the patterns
 class TrackPatternContainer extends Component{ 
     constructor(props){
-        super(props);
-
-        
+        super(props);  
     }
 
     initialState = {
@@ -184,7 +190,8 @@ class TrackPatternContainer extends Component{
     }
 }
 
-// a singular track
+// TrackView
+// the container for a singular track
 class TrackView extends Component{ 
     constructor(props){
         super(props);
@@ -219,6 +226,7 @@ class TrackView extends Component{
         }
     }
     
+    // handles processing after solo button click
     handleSoloButtonClick = () =>{
         let soloActive = !this.state.soloActive;
         this.setState({soloActive});
@@ -229,6 +237,8 @@ class TrackView extends Component{
         this.props.handleSolo(this.props.trackID); // mutes every track but this track, indicated by the trackID
     }
 
+    // changes mute status to true if not current solo track --> after clicking solo
+    // otherwise just mute
     handleMute = () =>{
         let isTrackMuted = false;
         if(this.state.muteActive) isTrackMuted = true;
@@ -241,10 +251,12 @@ class TrackView extends Component{
         this.setState({isTrackMuted: isTrackMuted});
     }
 
+    // middleman prop function for handling delete button clicks
     handleDeleteButtonClick = () => {
         this.props.handleDeleteTrack(this.props.trackID); // deletes the corresponding entry in parent
     }
 
+    // middleman prop function for handling track clicks
     handleTrackClick = () =>{ // passes the trackID up to the app level
         this.props.onClick(this.props.trackID);
         // change class of trackControl
@@ -308,7 +320,8 @@ class TrackView extends Component{
     }
 }
 
-// contains all tracks
+// TrackContainer
+// contains all tracks, also referred to as the multi-track-container
 class TrackContainer extends Component{ 
     constructor(props){
         super(props);
@@ -354,10 +367,12 @@ class TrackContainer extends Component{
         this.setState({mutedTracks: tempMutedTracks});
     }
 
+    // prop function, change solo track
     handleSoloTrackChange = (trackID) =>{
         this.setState({currentSoloTrack: trackID});
     }
 
+    // prop function, create new track to render
     handleNewTrack = () =>{
         console.log("here")
         let tempTrackIds = this.state.currentTrackIds;
@@ -372,6 +387,7 @@ class TrackContainer extends Component{
         this.setState({currentTrackIds: tempTrackIds, mutedTracks: tempMutedTracks, generatedTrackID: tempGeneratedTrackID+1});
     }
 
+    // prop function, delete track, preventing it from being rendered
     handleDeleteTrack = (trackID) =>{
         let tempTrackIds = this.state.currentTrackIds;
         let tempMutedTracks = this.state.mutedTracks;
@@ -393,6 +409,7 @@ class TrackContainer extends Component{
         this.setState({currentTrackIds: tempTrackIds, mutedTracks: tempMutedTracks});
     }
 
+    // middleman function for handling track clicks
     // maybe move this to only the TrackControl? TODO: check if it works
     handleTrackClick = (trackID) =>{
         // change class of trackcontrol
@@ -402,6 +419,7 @@ class TrackContainer extends Component{
         this.setState({currentSelectedTrackID: trackID});
     }
 
+    // generates a more concise list of steps for simpler readability/coding
     handleTrackStepsStepsGeneration = (steps) => {
         // generate the steps to play here
         
@@ -415,6 +433,7 @@ class TrackContainer extends Component{
         return stepsToPlay;
     }
 
+    // checks and returns if a track is muted  
     findTrackMuteStatus = (trackID) =>{
         let foundIndex = this.state.mutedTracks.findIndex((element)=>{
             return element.trackID === trackID;
@@ -423,6 +442,7 @@ class TrackContainer extends Component{
         return this.state.mutedTracks[foundIndex].muted;
     }
 
+    // attempt at refreshing the envelope. Doesn't work
     componentDidUpdate(prevProps){
         //console.log(prevProps.trackOptions);
         //console.log(this.props.trackOptions);
@@ -444,7 +464,7 @@ class TrackContainer extends Component{
     // after receiving the trackID, we want to use a function in trackcontainer to look through each trackview
     // and call the mute function in each (except for the one that is solo)
     // ^^ perhaps use refs here
-    // pass down the currentsolotrack thing, each child checks to see if its id matches-  if not, then set to mute
+    // pass down the currentsolotrack property, each child checks to see if its id matches-  if not, then set to mute
     // if blank, unmute
 
     /*

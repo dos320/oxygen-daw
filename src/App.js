@@ -1,8 +1,15 @@
+/*
+    App.js
+    Created by Howard Zhang, for COMP4905 Winter 2022
+
+    The top level/"backend" of the app, handles most of the data processing and storage, 
+    ensures that the other components are functional and properly generated with the proper data passed
+    onto them
+*/
+
 import React, {Component} from 'react';
 import Table from './Table'
-import Form from './Form'
 import PianoRollComponent from './PianoRollComponent';
-import SimpleComponent from './ClassComponent';
 import TrackContainer from './TrackContainer';
 import {Song, Track, Instrument, Effect} from 'reactronica';
 import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
@@ -12,6 +19,8 @@ import { Box } from '@mui/system';
 
 var _ = require('lodash');
 
+// App
+// contains most of the logic and data processing that is responsible for upholding the backend of the app
 class App extends React.Component {
     removeCharacter = (index) =>{
         const {characters} = this.state;
@@ -28,12 +37,14 @@ class App extends React.Component {
         this.setState({characters: [...this.state.characters, character]}) // need spread operator here bc characters may be empty
     }
 
+    // prop function that updates currentSteps
     updateSteps = (steps) => {
         this.setState({
             currentSteps: steps,
         });
     }
 
+    // generates new patterns, and creates tracking entries in the state for pattern related data
     createNewPattern = () =>{
         let currentSteps = this.state.currentSteps;
         
@@ -90,6 +101,7 @@ class App extends React.Component {
         this.setState({currentSteps: currentSteps});
     }
 
+    // prop function that adds data in app upon being triggered
     handleCreateNewTrack = (trackID) =>{ // we want to create a new entry in currentSteps for each new track created
         let currentSteps = this.state.currentSteps;
         let currentNumPatterns = this.state.numPatterns;
@@ -120,6 +132,7 @@ class App extends React.Component {
         this.setState({currentSteps: currentSteps, numPatterns: currentNumPatterns});
     }
 
+    // prop function that deletes entries in the state after being triggered
     handleDeleteTrack = (trackID) =>{
         let currentSteps = this.state.currentSteps;
         for(let i = 0; i<currentSteps.length; i++){
@@ -131,10 +144,12 @@ class App extends React.Component {
         this.setState({currentSteps: currentSteps});
     }
 
+    // prop function that changes the currentSelectedTrackID upon selecting a track (signal sent from TrackContainer)
     handleTrackClick = (trackID) =>{
         this.setState({currentSelectedTrackID: trackID});
     }
 
+    // prop function that changes the currentSelectedPatternID upon selecting a pattern (signal sent from TrackContainer)
     // use this to also to set the notes in the pattern depending on the piano roll
     // pattern -> reflected on piano
     handlePatternClick = (patternID) =>{
@@ -157,6 +172,7 @@ class App extends React.Component {
             
     }
 
+    // prop function that updates the current steps, inputted from the piano roll (PianoRollComponent)
     // changes on piano roll -> reflected on pattern
     updateCurrentPianoRollSteps = (steps) =>{
         this.setState({currentPianoRollSteps: steps},
@@ -175,6 +191,8 @@ class App extends React.Component {
             });
     }
 
+    // prop function that toggles playback upon clicking the play button
+    // also handles the playhead logic - when to cancel and replay the animation
     handleAppLevelPlayButtonClick = () =>{
         this.setState({
             isPlaying: !this.state.isPlaying
@@ -210,6 +228,7 @@ class App extends React.Component {
     }
 
     /* optioncomponent stuff */
+    // prop functions that serve to take data sent from optionComponent and creating/changing entries in App's state
     setCurrentSelectedInstrument = (instrument) =>{
         let tempTrackOptions = [].concat(this.state.trackOptions);
         let foundIndex = this.state.trackOptions.findIndex((element)=>{
@@ -292,6 +311,7 @@ class App extends React.Component {
         tempTrackOptions[foundIndex].pan = val;
         this.setState({trackOptions: tempTrackOptions});
     }
+    // changes the speed of the track, and scales the animation speed of the playhead to match
     setCurrentBPM = (e) =>{
         //const onlyNum = e.target.value.replace(/[^0-9]/g, '');
         //console.log(onlyNum)
@@ -334,6 +354,7 @@ class App extends React.Component {
             });
         }
     }
+    // changes the current song volume upon moving the slider
     setCurrentSongVolume = (e) =>{
         this.setState({currentSongVolume: Number(e.target.value)})
     }
