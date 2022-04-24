@@ -1118,7 +1118,8 @@ caption {
 
 .multitrackContainer{
   border: 5px solid black;
-  overflow-x: auto;
+  /*overflow-x: auto;*/
+  overflow: auto;
   position: relative;
   height: 50vh;
   /*display: flex;
