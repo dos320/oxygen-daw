@@ -7,13 +7,13 @@
     Components for use with Oxygen
 */
 
-import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
-import { render } from '@testing-library/react';
-import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
-import React, { Component, useState } from 'react';
+//import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
+//mport { render } from '@testing-library/react';
+//import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
+import React, { Component } from 'react';
 import {Song, Track, Instrument, Effect} from 'reactronica';
-import { Filter } from 'tone';
-import TrackPattern from './TrackPattern';
+//import { Filter } from 'tone';
+//import TrackPattern from './TrackPattern';
 
 var _ = require('lodash');
 var noteNames =     [   
@@ -27,10 +27,6 @@ var noteNames =     [
 // TrackControl
 // generates the control bar on the left hand side of each track
 class TrackControl extends Component{ // note: generally, we should always use class components when dealing with state
-    constructor(props){
-        super(props);
-    }
-
     render(){ // style={}
         return(
             <>
@@ -72,10 +68,6 @@ class TrackControl extends Component{ // note: generally, we should always use c
 // TrackPatternContainer
 // generates the space inside the track that contains the patterns
 class TrackPatternContainer extends Component{ 
-    constructor(props){
-        super(props);  
-    }
-
     initialState = {
         // same as totalSteps in the piano component
         totalSteps: 16,
@@ -111,18 +103,18 @@ class TrackPatternContainer extends Component{
         // serves to populate activeSteps 
         for(let i = 0; i<this.props.currentTrackSteps.trackSteps.length; i++){
             activeSteps.push([...Array(noteNames.length)].map(e => Array(16).fill(false))); // push empty 16x #notes array for each new pattern
-            console.log(this.props.currentTrackSteps.trackSteps[i].pattern)
+            //console.log(this.props.currentTrackSteps.trackSteps[i].pattern)
             for(let j = 0; j<this.props.currentTrackSteps.trackSteps[i].pattern.length; j++){
                 if(this.props.currentTrackSteps.trackSteps[i].pattern[j].length > 0 && this.props.currentTrackSteps.trackSteps[i].pattern[j].length !== null){
                     for(let k = 0; k<this.props.currentTrackSteps.trackSteps[i].pattern[j].length; k++){
-                        console.log("pattern below")
-                        console.log(this.props.currentTrackSteps.trackSteps[i].pattern[j][k])
+                        //console.log("pattern below")
+                        //console.log(this.props.currentTrackSteps.trackSteps[i].pattern[j][k])
                         let foundIndex = noteNames.indexOf(this.props.currentTrackSteps.trackSteps[i].pattern[j][k]);
-                        if(foundIndex != -1) activeSteps[i][j][foundIndex] = true;
+                        if(foundIndex !== -1) activeSteps[i][j][foundIndex] = true;
                     }
                 }
             }
-            console.log(activeSteps);
+            //console.log(activeSteps);
         }
         
         
@@ -161,7 +153,7 @@ class TrackPatternContainer extends Component{
             // TODO: find some way to render these patterns side by side -- done.
             patternsToRender.push(
                 <div 
-                    className={this.props.currentSelectedPatternID == (this.props.trackID + '-pattern-' + i) ? 'trackPattern-active' : 'trackPattern'} 
+                    className={this.props.currentSelectedPatternID === (this.props.trackID + '-pattern-' + i) ? 'trackPattern-active' : 'trackPattern'} 
                     //id={`${patternIDString}`} 
                     //key={`${patternIDString}`} 
                     id={this.props.trackID + '-pattern-' + i}
@@ -214,7 +206,7 @@ class TrackView extends Component{
         // notify parent that mute button is clicked
         // change style of clicked button (done, as the className is set to the appropriate class)
         
-        if(this.props.currentSoloTrack == ''){ // disables muting when solo is active 
+        if(this.props.currentSoloTrack === ''){ // disables muting when solo is active 
             let muteActive = !this.state.muteActive;
 
             this.setState({muteActive}); // change style
@@ -294,7 +286,7 @@ class TrackView extends Component{
         return(
             <div className='trackContainer' onClick={this.handleTrackClick}>   
                 <TrackControl
-                className={this.props.currentSelectedTrackID == this.props.trackID ? 'trackControlContainer-active' : 'trackControlContainer'}
+                className={this.props.currentSelectedTrackID === this.props.trackID ? 'trackControlContainer-active' : 'trackControlContainer'}
                 handleMuteButtonClick={this.handleMuteButtonClick}
                 handleSoloButtonClick={this.handleSoloButtonClick}
                 handleDeleteButtonClick={this.handleDeleteButtonClick}
@@ -392,8 +384,8 @@ class TrackContainer extends Component{
         let tempTrackIds = this.state.currentTrackIds;
         let tempMutedTracks = this.state.mutedTracks;
         for(var i = 0; i<this.state.currentTrackIds.length; i++){
-            console.log(this.state.currentTrackIds[i] == trackID);
-            if(this.state.currentTrackIds[i] == trackID){
+            console.log(this.state.currentTrackIds[i] === trackID);
+            if(this.state.currentTrackIds[i] === trackID){
                 tempTrackIds.splice(i, 1);
                 break;
             } 
@@ -425,7 +417,7 @@ class TrackContainer extends Component{
         
         let stepsToPlay = [];
         for(let i = 0; i<steps.length; i++){
-            console.log(steps[i].pattern);
+            //console.log(steps[i].pattern);
             for(let j = 0; j<steps[i].pattern.length; j++){
                 stepsToPlay.push(steps[i].pattern[j]);
             }
@@ -447,8 +439,8 @@ class TrackContainer extends Component{
         //console.log(prevProps.trackOptions);
         //console.log(this.props.trackOptions);
         //if(this.props.prevTrackOptions !== []){
-            console.log(prevProps.trackOptions)
-            console.log(this.props.trackOptions)
+            //console.log(prevProps.trackOptions)
+            //console.log(this.props.trackOptions)
             if(!_.isEqual(prevProps.trackOptions, this.props.trackOptions)){ // BUGGED - ENVELOPE DOES NOT UPDATE UNTIL INSTURMENT IS SWITCHED
                 console.log("force update");
                 this.forceUpdate(); 

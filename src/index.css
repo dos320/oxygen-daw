@@ -1139,7 +1139,7 @@ caption {
   position:absolute;
   border: solid 1px purple;
   width: 2px;
-  height: 100%;
+  height: 99999px;
   background-color: purple;
   animation: playhead-move 10s linear infinite alternate;
 }
