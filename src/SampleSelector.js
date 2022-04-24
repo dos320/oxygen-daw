@@ -6,15 +6,11 @@
     Component for use with Oxygen
 */
 
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { Stack, Grid } from '@mui/material';
 // only appear if the sample option is selected
 // file selection doesnt work. use preset files 
 class SampleSelector extends Component{
-    constructor(props){
-        super(props);
-    }
-
     initialState = {
         paths:[],
     }

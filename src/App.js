@@ -7,12 +7,12 @@
     onto them
 */
 
-import React, {Component} from 'react';
-import Table from './Table'
+import React from 'react';
+//import Table from './Table'
 import PianoRollComponent from './PianoRollComponent';
 import TrackContainer from './TrackContainer';
-import {Song, Track, Instrument, Effect} from 'reactronica';
-import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
+//import {Song, Track, Instrument, Effect} from 'reactronica';
+//import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
 import OptionsComponent from './OptionsComponent';
 import { Slider, Stack, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
@@ -57,7 +57,7 @@ class App extends React.Component {
         let foundIndex = 0;
         
         for(let i = 0; i<currentSteps.length; i++){
-            if(currentSteps[i].trackID == this.state.currentSelectedTrackID) {
+            if(currentSteps[i].trackID === this.state.currentSelectedTrackID) {
                 foundIndex = i;
                 break;
             }
@@ -136,7 +136,7 @@ class App extends React.Component {
     handleDeleteTrack = (trackID) =>{
         let currentSteps = this.state.currentSteps;
         for(let i = 0; i<currentSteps.length; i++){
-            if(currentSteps[i].trackID == trackID){
+            if(currentSteps[i].trackID === trackID){
                 currentSteps.splice(i, 1);
                 break;
             } 
@@ -484,6 +484,7 @@ class App extends React.Component {
                         <img 
                             src={this.state.isPlaying ? process.env.PUBLIC_URL + "/stop.png" : process.env.PUBLIC_URL + "/play.png"} 
                             className='play-stop-button'
+                            alt='play/stop button'
                         />
                     </button>
                     <TextField 

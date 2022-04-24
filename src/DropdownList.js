@@ -5,13 +5,10 @@
     Modified HTML select that uses prop and state
 */
 
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 
 // props: label, list of items, onChange
 class DropdownList extends Component{
-    constructor(props){
-        super(props); 
-    }
 
     initialState = {
         value: '',

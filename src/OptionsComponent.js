@@ -6,13 +6,13 @@
     components that can be used to customize said data
     Components for use with Oxygen
 */
-import React, { Component, useState } from 'react';
-import { Sampler } from 'tone';
+import React, { Component } from 'react';
+//import { Sampler } from 'tone';
 import DropdownList from './DropdownList';
 import NumberSelector from './NumberSelector';
 import SampleSelector from './SampleSelector';
 import Slider from '@mui/material/Slider';
-import {Effect} from 'reactronica';
+//import {Effect} from 'reactronica';
 import { TextField, Typography, Stack, Grid } from '@mui/material';
 
 // EffectContainer
@@ -20,10 +20,6 @@ import { TextField, Typography, Stack, Grid } from '@mui/material';
 
 // filled by EffectsControls
 class EffectContainer extends Component{
-    constructor(props){
-        super(props);
-    }
-
     initialState = {
         wetValue: this.props.wetValue,
     };
@@ -62,9 +58,6 @@ class EffectContainer extends Component{
 // EffectsControls
 // handles generation, logic and displaying of all Effect components
 class EffectsControls extends Component{
-    constructor(props){
-        super(props);
-    }
     initialState = {
         effectToAdd: {key: 'autoFilter', value: 'autoFilter', name: 'Auto Filter', wet: 0.2},
         currentEffects: this.props.trackOptions[this.props.trackOptions.findIndex((element)=>{
@@ -111,7 +104,7 @@ class EffectsControls extends Component{
             return element.key === this.state.effectToAdd.key;
         })
 
-        if(dupe == undefined){
+        if(dupe === undefined){
             tempEffects.push(this.state.effectToAdd);
             this.props.setCurrentEffects(tempEffects);
         }
@@ -171,9 +164,6 @@ class EffectsControls extends Component{
 // MainControls
 // renders all elements inside the OptionsComponent except for the effects, sends data back to App
 class MainControls extends Component{
-    constructor(props){
-        super(props);
-    }
     foundIndex = this.props.trackOptions.findIndex((element)=>{
         return element.trackID === this.props.currentSelectedTrackID;
     });
@@ -338,10 +328,6 @@ class MainControls extends Component{
 // OptionsComponent
 // container for everything options related
 class OptionsComponent extends Component{
-    constructor(props){
-        super(props);
-    }
-
     handleTrackNameChange = (e) =>{
         this.props.setTrackName(e.target.value);
     }

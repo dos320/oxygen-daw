@@ -7,8 +7,8 @@
     Component for use with Oxygen
 */
 
-import { render } from '@testing-library/react';
-import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
+//import { render } from '@testing-library/react';
+//import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
 import _ from 'lodash';
 import React, { Component, useState } from 'react';
 import {Song, Track, Instrument} from 'reactronica';
@@ -83,8 +83,8 @@ class PianoRoll extends Component{
             });
         }
         
-        console.log(prevProps.currentPianoRollSteps);
-        console.log(this.props.currentPianoRollSteps)
+        //console.log(prevProps.currentPianoRollSteps);
+        //console.log(this.props.currentPianoRollSteps)
     }
 
     changePianoButtonStyle = (e) =>{

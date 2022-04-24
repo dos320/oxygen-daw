@@ -6,15 +6,11 @@
     or incrementing/decrementing the current number
 */
 
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import TextField from '@mui/material/TextField'
 
 
 class NumberSelector extends Component{
-    constructor(props){
-        super(props);
-        
-    }
 
     initialState ={
         value: '',
