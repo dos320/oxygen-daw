@@ -501,7 +501,8 @@ class TrackContainer extends Component{
                 return element.trackID === this.state.currentTrackIds[i];
             });
             let combinedSteps = this.handleTrackStepsStepsGeneration(foundTrackCurrentSteps.trackSteps);
-            let tempMutedTracks = this.state.mutedTracks;
+            let tempMutedTracks = this.state.mutedTracks; // directly editing the state here
+            let tempMutedTracksOriginal = JSON.parse(JSON.stringify(this.state.mutedTracks));
             let foundIndex = tempMutedTracks.findIndex((element)=>{
                 return element.trackID === this.state.currentTrackIds[i];
             });
@@ -512,13 +513,19 @@ class TrackContainer extends Component{
                                     steps={[].concat(this.handleTrackStepsStepsGeneration(this.props.currentSteps[i].trackSteps))} // need to fix this
                                     key={this.state.currentTrackIds[i]}
                                     onStepPlay={(_, index)=>{
-                                        if(index > combinedSteps.length){
+                                        //console.log(index + " " + combinedSteps.length)
+                                        //console.log(combinedSteps.length)
+                                        if(index >= combinedSteps.length-1){
                                             tempMutedTracks[foundIndex].muted = true;
-                                        }else if(tempMutedTracks[foundIndex].muted){
+                                            console.log(foundIndex + " here1")
+                                        }else if(tempMutedTracks[foundIndex].muted && tempMutedTracksOriginal[foundIndex].muted == false){
                                             tempMutedTracks[foundIndex].muted = false;
+                                            console.log(foundIndex + " here2")
                                         }
                                         // mute the track
                                         // unmute after pausing/playing
+                                        //console.log(tempMutedTracksOriginal)
+                                        //console.log(this.state.mutedTracks[foundIndex]);
                                     }}
                                 >
                                     <Instrument 

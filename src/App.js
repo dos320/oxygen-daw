@@ -94,11 +94,19 @@ class App extends React.Component {
         let foundIndex = currentSteps.findIndex((element)=>{
             return element.trackID === this.state.currentSelectedTrackID;
         });
+        
         console.log(foundIndex)
         currentSteps[foundIndex].trackSteps.splice(currentSteps[foundIndex].trackSteps.findIndex((element)=>{
             return element.patternID === patternID;
         }), 1);
-        this.setState({currentSteps: currentSteps});
+
+        let tempNumPatterns = this.state.numPatterns;
+        let foundNumPatternsIndex = tempNumPatterns.findIndex((element)=>{
+            return element.trackID === this.state.currentSelectedTrackID;
+        });
+
+        tempNumPatterns[foundNumPatternsIndex].num--;
+        this.setState({currentSteps: currentSteps, numPatterns: tempNumPatterns});
     }
 
     // prop function that adds data in app upon being triggered
@@ -202,7 +210,7 @@ class App extends React.Component {
                 let maxNumPatterns = _.maxBy(this.state.numPatterns, (element)=>{
                     return element.num;
                 })
-                console.log("maxnumpatterns: " + maxNumPatterns)
+                console.log("maxnumpatterns: " + maxNumPatterns.num)
                 let animTime = 1800 / (18.75 * this.state.currentBPM / 60);
                 let intervalTime = ((300 * maxNumPatterns.num / 1800) * animTime) * 1000;
                 console.log("interval time: " + intervalTime);
