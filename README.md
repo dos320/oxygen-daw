@@ -12,8 +12,10 @@ If downloading from Github:
 1. ensure you have the latest stable version of [Node.js](https://nodejs.org/en/) installed
 2. clone and/or extract into desired directory
 3. run `npm install`
-4. run `npm start`
-5. navigate to [http://localhost:3000](http://localhost:3000)
+4. run `npm run build`
+5. run `npm install -g serve`
+6. run `npx serve -s build`
+7. navigate to [http://localhost:3000](http://localhost:3000), or the other generated link for access on mobile/other remote devices
 
 Otherwise, you can simply access the remotely hosted web app at [dos320.github.io/oxygen-daw/](http://dos320.github.io/oxygen-daw/)
 
