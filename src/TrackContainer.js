@@ -515,13 +515,13 @@ class TrackContainer extends Component{
                                     onStepPlay={(_, index)=>{
                                         //console.log(index + " " + combinedSteps.length)
                                         //console.log(combinedSteps.length)
-                                        if(index >= combinedSteps.length-1){
-                                            tempMutedTracks[foundIndex].muted = true;
-                                            console.log(foundIndex + " here1")
-                                        }else if(tempMutedTracks[foundIndex].muted && tempMutedTracksOriginal[foundIndex].muted == false){
-                                            tempMutedTracks[foundIndex].muted = false;
-                                            console.log(foundIndex + " here2")
-                                        }
+                                        //if(index >= combinedSteps.length-1){
+                                            //tempMutedTracks[foundIndex].muted = true;
+                                            //console.log(foundIndex + " here1")
+                                        //}else if(tempMutedTracks[foundIndex].muted && tempMutedTracksOriginal[foundIndex].muted == false){
+                                           // tempMutedTracks[foundIndex].muted = false;
+                                            //console.log(foundIndex + " here2")
+                                        //}
                                         // mute the track
                                         // unmute after pausing/playing
                                         //console.log(tempMutedTracksOriginal)
@@ -532,9 +532,9 @@ class TrackContainer extends Component{
                                         type={foundObject.currentSelectedInstrument}
                                         samples={{
                                             C3: process.env.PUBLIC_URL + '/Kick Basic.mp3',
-                                            D3: process.env.PUBLIC_URL + '/Snare Basic.mp3',
-                                            E3: process.env.PUBLIC_URL + '/Clap Basic.mp3',
-                                            F3: process.env.PUBLIC_URL + '/Hat Basic.mp3',
+                                            D3: process.env.PUBLIC_URL + '/Clap Basic.mp3',
+                                            E3: process.env.PUBLIC_URL + '/Hat Basic.mp3',
+                                            F3: process.env.PUBLIC_URL + '/Snare Basic.mp3',
                                         }}
                                         onLoad={(buffers) => {
                                             // Runs when all samples are loaded
